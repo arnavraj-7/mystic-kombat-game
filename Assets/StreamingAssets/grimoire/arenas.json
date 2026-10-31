@@ -1,0 +1,10 @@
+{
+  "arenas": [
+    { "id": "leaf_rooftops",  "name": "Hidden Leaf Rooftops", "floorY": 0.17, "particles": "leaves", "music": "battle_1", "tint": "#FFE2C2" },
+    { "id": "tournament_isle","name": "Tournament Isle",      "floorY": 0.17, "particles": "dust",   "music": "battle_2", "tint": "#FFFFFF" },
+    { "id": "ruined_city",    "name": "Ruined Metropolis",    "floorY": 0.17, "particles": "embers", "music": "battle_3", "tint": "#E8E0FF" },
+    { "id": "kamar_temple",   "name": "Kamar-Taj Summit",     "floorY": 0.17, "particles": "sparks", "music": "battle_4", "tint": "#D8E4FF" },
+    { "id": "sakura_dojo",    "name": "Sakura Dojo",          "floorY": 0.17, "particles": "petals", "music": "battle_2", "tint": "#FFF0F6" },
+    { "id": "rift_void",      "name": "The Shattered Rift",   "floorY": 0.17, "particles": "void",   "music": "boss",     "tint": "#E6D6FF", "bossOnly": false }
+  ]
+}

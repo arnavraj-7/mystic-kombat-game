@@ -1,0 +1,151 @@
+// Mystic Kombat grimoire: every fighter, move and frame-data value lives here and is loaded at runtime.
+// Edit and restart the match (or press F5 in Training) to see changes. Frames are 60 fps.
+// hitbox = [forward offset, centre height, width, height] in world units (fighters are ~2.1 tall).
+{
+  "rules": {
+    "roundSeconds": 99, "roundsToWin": 2, "maxRounds": 5,
+    "stageHalfWidth": 9.0, "maxSeparation": 11.0, "gravity": 40,
+    "kiMax": 100, "kiOnDeal": 0.075, "kiOnTake": 0.055,
+    "rageThreshold": 0.25, "rageDamage": 1.12, "rageUltCost": 50,
+    "bufferFrames": 8, "throwBreakWindow": 14,
+    "orbTimes": [70, 35], "orbKi": 30
+  },
+
+  "defaultMoves": {
+    "light":        { "name": "Jab",          "pose": "light", "startup": 5,  "active": 3, "recovery": 8,  "damage": 32, "hitstun": 15, "blockstun": 10, "hitstop": 6,  "kbX": 1.2, "hitbox": [0.75, 1.35, 0.95, 0.45], "sfx": "whoosh_light" },
+    "heavy":        { "name": "Heavy Strike", "pose": "heavy", "startup": 11, "active": 4, "recovery": 17, "damage": 68, "hitstun": 21, "blockstun": 14, "hitstop": 9,  "kbX": 2.6, "hitbox": [0.95, 1.2, 1.3, 0.6], "sfx": "whoosh_heavy" },
+    "crouch_light": { "name": "Low Jab",      "pose": "crouch", "startup": 5, "active": 3, "recovery": 9,  "damage": 26, "hitstun": 14, "blockstun": 9,  "hitstop": 5,  "kbX": 1.0, "height": "low", "hitbox": [0.8, 0.35, 1.0, 0.35], "sfx": "whoosh_light" },
+    "crouch_heavy": { "name": "Sweep",        "pose": "heavy", "startup": 9,  "active": 4, "recovery": 22, "damage": 60, "hitstun": 20, "blockstun": 13, "hitstop": 8,  "kbX": 1.8, "height": "low", "knockdown": true, "hitbox": [1.0, 0.3, 1.45, 0.4], "sfx": "whoosh_heavy" },
+    "air_light":    { "name": "Air Strike",   "pose": "light", "startup": 5,  "active": 6, "recovery": 6,  "damage": 36, "hitstun": 16, "blockstun": 10, "hitstop": 6,  "kbX": 1.2, "height": "overhead", "hitbox": [0.6, 0.7, 0.95, 0.75], "sfx": "whoosh_light" },
+    "air_heavy":    { "name": "Air Smash",    "pose": "heavy", "startup": 8,  "active": 6, "recovery": 8,  "damage": 58, "hitstun": 19, "blockstun": 12, "hitstop": 8,  "kbX": 2.0, "height": "overhead", "hitbox": [0.7, 0.55, 1.15, 0.85], "sfx": "whoosh_heavy" },
+    "throw":        { "name": "Throw",        "pose": "heavy", "startup": 5,  "active": 3, "recovery": 26, "damage": 95, "hitstop": 0,  "height": "throw", "hitbox": [0.7, 1.1, 0.8, 1.0], "sfx": "whoosh_heavy" }
+  },
+
+  "fighters": [
+    {
+      "id": "kazu", "name": "Kazu Kitsune", "title": "The Orange Fox Ninja", "color": "#FF8A1E", "archetype": "Rushdown",
+      "description": "Relentless ninja who overwhelms with clones and a spinning chakra orb. Heals once per round by drawing in nature energy.",
+      "hp": 1000, "walkSpeed": 3.8, "backSpeed": 3.0, "jumpVel": 14.5, "power": 1.0, "kiGain": 1.05,
+      "moves": {
+        "special1": { "name": "Shadow Clone Rush", "pose": "special1", "slot": "special1", "startup": 10, "active": 24, "recovery": 18, "moveX": 9, "hits": 3, "hitInterval": 8, "damage": 36, "hitstun": 18, "blockstun": 12, "kbX": 1.2, "hitbox": [0.6, 1.1, 1.2, 1.4], "afterimages": true, "vfx": "clones", "sfx": "whoosh_heavy", "charges": 2, "recharge": 360 },
+        "special2": { "name": "Spiral Orb", "pose": "special2", "slot": "special2", "startup": 14, "active": 10, "recovery": 22, "moveStartupX": 3, "moveX": 6, "hits": 4, "hitInterval": 3, "damage": 28, "hitstun": 22, "hitstop": 5, "kbX": 1.0, "knockdown": true, "hitbox": [0.9, 1.2, 1.0, 1.0], "vfx": "spiral_orb", "sfx": "ki_charge", "charges": 1, "recharge": 600 },
+        "special3": { "name": "Fox Sage Recovery", "pose": "special3", "slot": "special3", "kind": "none", "startup": 10, "active": 50, "recovery": 14, "heal": { "amount": 140, "from": 10, "to": 60 }, "buff": { "damage": 1.1, "duration": 360 }, "vfx": "heal", "sfx": "heal", "charges": 1, "recharge": 0 },
+        "ultimate": { "name": "Ninefold Fox Tempest", "pose": "ultimate", "slot": "ultimate", "cinematic": true, "startup": 8, "active": 30, "recovery": 30, "moveX": 10, "hits": 6, "hitInterval": 5, "damage": 52, "hitstun": 26, "hitstop": 8, "kbX": 2.0, "knockdown": true, "hitbox": [0.8, 1.2, 1.8, 1.8], "invuln": [0, 8], "vfx": "fox_chakra", "sfx": "ult_flash" }
+      }
+    },
+    {
+      "id": "goro", "name": "Goro Kaiten", "title": "Starborn Brawler", "color": "#FFB000", "archetype": "All-rounder",
+      "description": "Cheerful powerhouse with a ki volley, an instant-step teleport and the stage-splitting Heaven-Splitter Wave.",
+      "hp": 1000, "walkSpeed": 3.5, "jumpVel": 14.5, "power": 1.05,
+      "moves": {
+        "special1": { "name": "Ki Volley", "pose": "special1", "slot": "special1", "kind": "projectile", "startup": 12, "active": 20, "recovery": 18, "projectile": { "vfx": "ki_blast", "speed": 11, "w": 0.55, "h": 0.55, "y": 1.35, "count": 3, "interval": 9, "spreadY": 0.22, "damage": 30, "hitstun": 15, "kbX": 1.2 }, "sfx": "ki_blast", "charges": 2, "recharge": 300 },
+        "special2": { "name": "Instant Step", "pose": "special2", "slot": "special2", "startup": 14, "active": 4, "recovery": 18, "teleport": { "mode": "behind", "dist": 1.2, "frame": 8 }, "invuln": [0, 10], "damage": 85, "hitstun": 22, "kbX": 2.5, "launch": true, "hitbox": [0.8, 1.3, 1.1, 0.9], "vfx": "teleport", "sfx": "teleport", "charges": 1, "recharge": 480 },
+        "special3": { "name": "Dragon Fist", "pose": "special3", "slot": "special3", "startup": 12, "active": 10, "recovery": 24, "moveX": 10, "damage": 110, "hitstun": 24, "hitstop": 12, "kbX": 4, "knockdown": true, "armor": [4, 12], "hitbox": [0.8, 1.3, 1.2, 0.9], "vfx": "fire_dragon", "sfx": "whoosh_heavy", "charges": 1, "recharge": 600 },
+        "ultimate": { "name": "Heaven-Splitter Wave", "pose": "ultimate", "slot": "ultimate", "cinematic": true, "startup": 20, "active": 40, "recovery": 30, "hits": 8, "hitInterval": 5, "damage": 40, "hitstun": 20, "hitstop": 4, "kbX": 1.5, "hitbox": [7.5, 1.3, 14, 1.3], "vfx": "beam", "sfx": "beam" }
+      }
+    },
+    {
+      "id": "shin", "name": "Shin Ippatsu", "title": "The Caped Baldy", "color": "#FFE14D", "archetype": "Powerhouse",
+      "description": "Bored hero whose normal punches are already too strong. Slow to charge Ki, but one Serious Punch ends rounds.",
+      "hp": 1050, "walkSpeed": 3.0, "backSpeed": 2.4, "jumpVel": 14, "power": 1.12, "defense": 0.95, "kiGain": 0.95,
+      "moves": {
+        "special1": { "name": "Serious Side-Steps", "pose": "special1", "slot": "special1", "kind": "none", "startup": 6, "active": 8, "recovery": 10, "teleport": { "mode": "forward", "dist": 2.2, "frame": 6 }, "invuln": [0, 18], "afterimages": true, "sfx": "teleport", "charges": 2, "recharge": 300 },
+        "special2": { "name": "Consecutive Normal Punches", "pose": "special2", "slot": "special2", "startup": 9, "active": 30, "recovery": 20, "moveX": 1.5, "hits": 8, "hitInterval": 4, "damage": 15, "hitstun": 16, "hitstop": 3, "kbX": 0.6, "hitbox": [0.9, 1.3, 1.25, 1.0], "vfx": "hit_spark", "sfx": "hit_light", "charges": 1, "recharge": 540 },
+        "special3": { "name": "Bored Counter", "pose": "special3", "slot": "special3", "kind": "none", "startup": 2, "active": 30, "recovery": 18, "counter": { "from": 2, "to": 30, "into": "counter_punch" }, "sfx": "block", "charges": 2, "recharge": 420 },
+        "counter_punch": { "name": "Bored Punch", "pose": "heavy", "slot": "special3", "startup": 3, "active": 3, "recovery": 16, "damage": 110, "hitstun": 26, "hitstop": 14, "kbX": 5, "launch": true, "hitbox": [0.8, 1.3, 1.4, 1.2], "vfx": "hit_spark_heavy" },
+        "ultimate": { "name": "Serious Punch", "pose": "ultimate", "slot": "ultimate", "cinematic": true, "startup": 20, "active": 4, "recovery": 40, "damage": 340, "chip": 85, "hitstun": 40, "hitstop": 22, "kbX": 8, "launch": true, "armor": [0, 20], "hitbox": [1.4, 1.3, 2.6, 2.0], "vfx": "shockwave", "sfx": "explosion" }
+      }
+    },
+    {
+      "id": "zevrin", "name": "Zevrin", "title": "The Fused Prince", "color": "#3D7BFF", "archetype": "Technical",
+      "description": "Two warriors fused into one arrogant prince. Spirit Sword pokes, arcing Ki bombs and a reflecting barrier.",
+      "hp": 1000, "walkSpeed": 3.6, "jumpVel": 14.5, "power": 1.12, "defense": 1.0,
+      "moves": {
+        "special1": { "name": "Spirit Sword", "pose": "special1", "slot": "special1", "startup": 9, "active": 6, "recovery": 18, "moveStartupX": 6, "damage": 95, "hitstun": 21, "hitstop": 10, "kbX": 3, "hitbox": [1.2, 1.3, 1.8, 0.6], "vfx": "slash_arc", "sfx": "slash", "charges": 2, "recharge": 420 },
+        "special2": { "name": "Twin Ki Bombs", "pose": "special2", "slot": "special2", "kind": "projectile", "startup": 14, "active": 12, "recovery": 22, "projectile": { "vfx": "ki_blast", "speed": 8, "vy": 7, "gravity": 12, "w": 0.8, "h": 0.8, "y": 1.6, "scale": 1.3, "count": 2, "interval": 10, "damage": 48, "hitstun": 20, "kbX": 2, "kbY": 6, "strength": 1.5 }, "sfx": "ki_blast", "charges": 1, "recharge": 420 },
+        "special3": { "name": "Fusion Barrier", "pose": "special3", "slot": "special3", "kind": "none", "startup": 3, "active": 42, "recovery": 12, "shield": { "from": 3, "to": 45, "reflect": true }, "vfx": "shield", "sfx": "shield", "charges": 1, "recharge": 600 },
+        "ultimate": { "name": "Final Fusion Flash", "pose": "ultimate", "slot": "ultimate", "cinematic": true, "startup": 18, "active": 40, "recovery": 30, "hits": 8, "hitInterval": 5, "damage": 41, "hitstun": 20, "hitstop": 4, "kbX": 1.5, "hitbox": [7.5, 1.4, 14, 1.5], "vfx": "beam", "sfx": "beam" }
+      }
+    },
+    {
+      "id": "rio", "name": "Rio Gomu", "title": "Rubber Pirate", "color": "#E8322E", "archetype": "Long-range brawler",
+      "description": "Stretchy pirate with the longest punches in the multiverse. Eats a whole feast mid-fight to recover.",
+      "hp": 1020, "walkSpeed": 3.6, "jumpVel": 15, "weight": 0.9, "defense": 0.95,
+      "moves": {
+        "special1": { "name": "Stretch Pistol", "pose": "special1", "slot": "special1", "startup": 12, "active": 5, "recovery": 24, "damage": 80, "hitstun": 20, "hitstop": 9, "kbX": 3, "hitbox": [2.4, 1.35, 3.4, 0.5], "sfx": "whoosh_heavy", "charges": 2, "recharge": 300 },
+        "special2": { "name": "Gatling Fists", "pose": "special2", "slot": "special2", "startup": 10, "active": 32, "recovery": 20, "hits": 8, "hitInterval": 4, "damage": 14, "hitstun": 16, "hitstop": 3, "kbX": 0.5, "hitbox": [1.6, 1.3, 2.4, 1.1], "vfx": "hit_spark", "sfx": "hit_light", "charges": 1, "recharge": 480 },
+        "special3": { "name": "Meat Feast", "pose": "special3", "slot": "special3", "kind": "none", "startup": 8, "active": 60, "recovery": 16, "heal": { "amount": 130, "from": 8, "to": 68 }, "vfx": "heal", "sfx": "heal", "charges": 1, "recharge": 0 },
+        "ultimate": { "name": "Titan Fist", "pose": "ultimate", "slot": "ultimate", "cinematic": true, "startup": 24, "active": 6, "recovery": 34, "damage": 330, "chip": 60, "hitstun": 40, "hitstop": 20, "kbX": 9, "launch": true, "armor": [0, 24], "hitbox": [2.6, 1.5, 4.6, 2.6], "vfx": "shockwave", "sfx": "explosion" }
+      }
+    },
+    {
+      "id": "kuro", "name": "Kuro Ryuga", "title": "Soul Cleaver", "color": "#C21A2B", "archetype": "Swordsman",
+      "description": "Reaper with a cleaver-sized blade. Fires crescent slash waves and dons a hollow mask for armoured power.",
+      "hp": 1000, "walkSpeed": 3.5, "jumpVel": 14.5, "power": 1.06,
+      "moves": {
+        "heavy": { "name": "Cleaver Swing", "hitbox": [1.1, 1.25, 1.6, 0.8], "startup": 12, "damage": 72 },
+        "special1": { "name": "Crescent Fang", "pose": "special1", "slot": "special1", "kind": "projectile", "startup": 15, "active": 1, "recovery": 24, "projectile": { "vfx": "crescent", "speed": 12, "w": 1.0, "h": 1.8, "y": 1.2, "damage": 85, "hitstun": 22, "kbX": 3, "strength": 2 }, "sfx": "slash", "charges": 2, "recharge": 420 },
+        "special2": { "name": "Flash Step", "pose": "special2", "slot": "special2", "startup": 10, "active": 4, "recovery": 16, "teleport": { "mode": "forward", "dist": 3, "frame": 5 }, "invuln": [0, 10], "damage": 70, "hitstun": 20, "kbX": 2, "hitbox": [0.9, 1.3, 1.4, 1.2], "vfx": "slash_arc", "sfx": "teleport", "charges": 2, "recharge": 360 },
+        "special3": { "name": "Hollow Mask", "pose": "special3", "slot": "special3", "kind": "none", "startup": 20, "active": 1, "recovery": 16, "buff": { "damage": 1.15, "speed": 1.1, "armor": true, "duration": 360 }, "vfx": "aura", "sfx": "ki_charge", "charges": 1, "recharge": 0 },
+        "ultimate": { "name": "Black Moon Crescent", "pose": "ultimate", "slot": "ultimate", "kind": "projectile", "cinematic": true, "startup": 22, "active": 1, "recovery": 34, "projectile": { "vfx": "crescent", "speed": 14, "w": 2.0, "h": 3.2, "y": 1.5, "scale": 2.4, "life": 90, "hits": 4, "hitInterval": 6, "damage": 75, "hitstun": 24, "kbX": 2, "knockdown": true, "strength": 10 }, "sfx": "slash" }
+      }
+    },
+    {
+      "id": "sho", "name": "Sho Raikiri", "title": "Lightning Avenger", "color": "#6A4CFF", "archetype": "Speed / counter",
+      "description": "Fast, fragile avenger. Lightning thrusts, fire breath, a reading counter and a Kirin bolt you must dodge, not block.",
+      "hp": 960, "walkSpeed": 3.9, "backSpeed": 3.1, "jumpVel": 15, "power": 1.05,
+      "moves": {
+        "special1": { "name": "Chirping Blade", "pose": "special1", "slot": "special1", "startup": 10, "active": 12, "recovery": 20, "moveX": 12, "damage": 100, "hitstun": 22, "hitstop": 11, "kbX": 3.5, "knockdown": true, "hitbox": [0.9, 1.3, 1.2, 0.8], "vfx": "lightning", "sfx": "lightning", "charges": 2, "recharge": 420 },
+        "special2": { "name": "Fire Dragon Breath", "pose": "special2", "slot": "special2", "kind": "projectile", "startup": 16, "active": 1, "recovery": 24, "projectile": { "vfx": "fireball", "speed": 9, "w": 1.2, "h": 1.2, "y": 1.4, "damage": 80, "hitstun": 21, "kbX": 3, "strength": 1.5 }, "sfx": "explosion", "charges": 2, "recharge": 360 },
+        "special3": { "name": "Eye of Insight", "pose": "special3", "slot": "special3", "kind": "none", "startup": 2, "active": 26, "recovery": 18, "counter": { "from": 2, "to": 26, "into": "insight_strike" }, "sfx": "block", "charges": 1, "recharge": 480 },
+        "insight_strike": { "name": "Insight Strike", "pose": "heavy", "slot": "special3", "startup": 4, "active": 3, "recovery": 16, "teleport": { "mode": "behind", "dist": 1.0, "frame": 1 }, "damage": 105, "hitstun": 26, "hitstop": 12, "kbX": 3, "launch": true, "hitbox": [0.9, 1.3, 1.4, 1.2], "vfx": "slash_arc" },
+        "ultimate": { "name": "Thunder Kirin", "pose": "ultimate", "slot": "ultimate", "cinematic": true, "startup": 40, "active": 10, "recovery": 30, "targetOpponent": true, "height": "unblockable", "hits": 3, "hitInterval": 4, "damage": 110, "hitstun": 30, "hitstop": 10, "kbX": 2, "knockdown": true, "hitbox": [0, 1.8, 2.0, 4.0], "vfx": "lightning", "sfx": "lightning" }
+      }
+    },
+    {
+      "id": "ren", "name": "Ren Mugen", "title": "Infinity Sorcerer", "color": "#4FD8FF", "archetype": "Zoner / glass cannon",
+      "description": "The strongest sorcerer alive. Pulls with Blue, blasts with Red, and nothing touches him inside Infinity.",
+      "hp": 960, "walkSpeed": 3.4, "jumpVel": 14, "power": 1.1, "kiGain": 1.1,
+      "moves": {
+        "special1": { "name": "Blue Pull", "pose": "special1", "slot": "special1", "kind": "projectile", "startup": 12, "active": 1, "recovery": 22, "projectile": { "vfx": "blue_orb", "speed": 7, "w": 1.0, "h": 1.0, "y": 1.3, "damage": 45, "hitstun": 26, "kbX": -4, "strength": 1.5 }, "sfx": "ki_charge", "charges": 2, "recharge": 360 },
+        "special2": { "name": "Red Push", "pose": "special2", "slot": "special2", "startup": 12, "active": 4, "recovery": 22, "damage": 90, "hitstun": 22, "hitstop": 12, "kbX": 9, "knockdown": true, "hitbox": [1.0, 1.3, 1.6, 1.4], "vfx": "red_orb", "sfx": "explosion", "charges": 2, "recharge": 420 },
+        "special3": { "name": "Infinity Ward", "pose": "special3", "slot": "special3", "kind": "none", "startup": 2, "active": 48, "recovery": 12, "shield": { "from": 2, "to": 50 }, "heal": { "amount": 70, "from": 2, "to": 50 }, "vfx": "shield", "sfx": "shield", "charges": 1, "recharge": 900 },
+        "ultimate": { "name": "Hollow Violet", "pose": "ultimate", "slot": "ultimate", "kind": "projectile", "cinematic": true, "startup": 30, "active": 1, "recovery": 30, "projectile": { "vfx": "purple_orb", "speed": 10, "w": 2.4, "h": 2.4, "y": 1.3, "scale": 3, "life": 160, "hits": 3, "hitInterval": 8, "damage": 100, "hitstun": 28, "kbX": 2, "knockdown": true, "strength": 10 }, "sfx": "beam" }
+      }
+    },
+    {
+      "id": "kai", "name": "Kai Hinomizu", "title": "Breathing Swordsman", "color": "#2BB5A0", "archetype": "Balanced swordsman",
+      "description": "Kind-hearted swordsman of flowing water forms. Invincible Water Wheel anti-air and a sun-dragon finisher.",
+      "hp": 1000, "walkSpeed": 3.6, "jumpVel": 14.5,
+      "moves": {
+        "heavy": { "name": "Water Slash", "hitbox": [1.05, 1.2, 1.5, 0.7] },
+        "special1": { "name": "Water Wheel", "pose": "special1", "slot": "special1", "startup": 6, "active": 14, "recovery": 20, "moveX": 3, "moveY": 13, "damage": 90, "hitstun": 22, "hitstop": 9, "kbX": 2, "launch": true, "invuln": [0, 8], "hitbox": [0.7, 1.6, 1.4, 1.8], "vfx": "water_wheel", "sfx": "slash", "charges": 2, "recharge": 360 },
+        "special2": { "name": "Flowing Dance", "pose": "special2", "slot": "special2", "startup": 10, "active": 24, "recovery": 18, "moveX": 4, "hits": 4, "hitInterval": 6, "damage": 30, "hitstun": 18, "hitstop": 5, "kbX": 1, "hitbox": [0.9, 1.2, 1.4, 1.2], "vfx": "slash_arc", "sfx": "slash", "charges": 2, "recharge": 420 },
+        "special3": { "name": "Total Breath", "pose": "special3", "slot": "special3", "kind": "none", "startup": 10, "active": 50, "recovery": 14, "heal": { "amount": 120, "from": 10, "to": 60 }, "vfx": "heal", "sfx": "heal", "charges": 1, "recharge": 0 },
+        "ultimate": { "name": "Sun Dragon Dance", "pose": "ultimate", "slot": "ultimate", "cinematic": true, "startup": 10, "active": 36, "recovery": 26, "moveX": 8, "hits": 6, "hitInterval": 6, "damage": 52, "hitstun": 26, "hitstop": 7, "kbX": 2, "knockdown": true, "hitbox": [0.9, 1.3, 1.8, 1.8], "invuln": [0, 10], "vfx": "fire_dragon", "sfx": "slash" }
+      }
+    },
+    {
+      "id": "hana", "name": "Hana Sakuraba", "title": "Cherry Blossom Medic", "color": "#FF6FB5", "archetype": "Bruiser / healer",
+      "description": "Medic-ninja with monstrous strength. Cracks the earth, throws blossom kunai and heals better than anyone.",
+      "hp": 950, "walkSpeed": 3.5, "jumpVel": 14.5, "power": 1.06,
+      "moves": {
+        "special1": { "name": "Cherry Quake", "pose": "special1", "slot": "special1", "startup": 16, "active": 6, "recovery": 22, "damage": 95, "hitstun": 22, "hitstop": 10, "kbX": 2, "kbY": 8, "height": "low", "hitbox": [1.6, 0.3, 3.2, 0.6], "vfx": "shockwave", "sfx": "explosion", "charges": 2, "recharge": 420 },
+        "special2": { "name": "Healing Palm", "pose": "special2", "slot": "special2", "kind": "none", "startup": 10, "active": 70, "recovery": 14, "heal": { "amount": 130, "from": 10, "to": 80 }, "vfx": "heal", "sfx": "heal", "charges": 1, "recharge": 900 },
+        "special3": { "name": "Blossom Kunai", "pose": "special3", "slot": "special3", "kind": "projectile", "startup": 10, "active": 12, "recovery": 16, "projectile": { "vfx": "kunai", "speed": 14, "w": 0.7, "h": 0.3, "y": 1.4, "count": 3, "interval": 5, "spreadY": 0.3, "damage": 24, "hitstun": 14, "kbX": 1 }, "sfx": "whoosh_light", "charges": 2, "recharge": 300 },
+        "ultimate": { "name": "Hundred Healings Smash", "pose": "ultimate", "slot": "ultimate", "cinematic": true, "startup": 18, "active": 6, "recovery": 30, "damage": 300, "chip": 50, "hitstun": 40, "hitstop": 20, "kbX": 8, "launch": true, "armor": [0, 18], "heal": { "amount": 60, "from": 0, "to": 18 }, "hitbox": [1.2, 1.3, 2.0, 1.8], "vfx": "shockwave", "sfx": "explosion" }
+      }
+    },
+    {
+      "id": "malgrath", "name": "Malgrath", "title": "Void Emperor", "color": "#9B3DFF", "archetype": "Arcade boss", "boss": true,
+      "description": "Tyrant of the shattered dimensions and the reason the rifts opened. Finger beams, supernovas and a planet-breaking finale.",
+      "hp": 1500, "walkSpeed": 3.3, "jumpVel": 14, "power": 1.15, "defense": 0.9, "kiGain": 1.2, "height": 2.3,
+      "moves": {
+        "special1": { "name": "Death Beam", "pose": "special1", "slot": "special1", "kind": "projectile", "startup": 9, "active": 1, "recovery": 18, "projectile": { "vfx": "death_beam", "speed": 22, "w": 1.4, "h": 0.25, "y": 1.5, "damage": 55, "hitstun": 18, "kbX": 2 }, "sfx": "beam", "charges": 3, "recharge": 240 },
+        "special2": { "name": "Supernova", "pose": "special2", "slot": "special2", "kind": "projectile", "startup": 22, "active": 1, "recovery": 28, "projectile": { "vfx": "purple_orb", "speed": 5, "w": 1.6, "h": 1.6, "y": 1.6, "scale": 1.8, "life": 220, "hits": 3, "hitInterval": 10, "damage": 50, "hitstun": 22, "kbX": 2, "strength": 3 }, "sfx": "ki_charge", "charges": 1, "recharge": 600 },
+        "special3": { "name": "Psychic Lift", "pose": "special3", "slot": "special3", "startup": 18, "active": 6, "recovery": 20, "targetOpponent": true, "damage": 80, "hitstun": 24, "kbX": 0.5, "kbY": 14, "launch": true, "hitbox": [0, 1.0, 1.4, 2.2], "vfx": "rift", "sfx": "teleport", "charges": 2, "recharge": 480 },
+        "ultimate": { "name": "Planet Breaker", "pose": "ultimate", "slot": "ultimate", "kind": "projectile", "cinematic": true, "startup": 34, "active": 1, "recovery": 30, "projectile": { "vfx": "purple_orb", "speed": 6, "w": 3.0, "h": 3.0, "y": 1.6, "scale": 4, "life": 200, "hits": 3, "hitInterval": 8, "damage": 110, "hitstun": 30, "kbX": 3, "knockdown": true, "strength": 10 }, "sfx": "explosion" }
+      }
+    }
+  ]
+}
