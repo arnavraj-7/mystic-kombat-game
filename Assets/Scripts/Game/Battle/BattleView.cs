@@ -379,6 +379,7 @@ namespace MysticKombat
                 if (aura)
                 {
                     // heals, shields, counters and power-ups glow around the body
+                    r.sharedMaterial = Additive;
                     r.sprite = AssetDb.Vfx(m.Vfx);
                     r.color = m.Vfx == "heal" ? new Color(0.5f, 1f, 0.6f, 0.8f) : m.Vfx == "shield" ? new Color(0.6f, 0.9f, 1f, 0.75f) : AssetDb.Hex(f.Def.Color, Color.white);
                     float pulse = 1f + 0.06f * Mathf.Sin(Time.time * 18f);
