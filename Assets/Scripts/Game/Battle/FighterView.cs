@@ -19,6 +19,7 @@ namespace MysticKombat
         float ghostTimer;
         int ghostNext;
         float tumbleSpin;
+        public Color Tint = Color.white;   // alternate colour for mirror matches
 
         public FighterView(Transform parent, Fighter f, int index)
         {
@@ -153,7 +154,7 @@ namespace MysticKombat
 
             // flicker while invulnerable (but not while lying down)
             bool flicker = f.Invuln > 0 && f.State != FState.Knockdown && f.State != FState.KO && f.State != FState.GetUp && (Time.frameCount / 3) % 2 == 0;
-            body.color = flicker ? new Color(1, 1, 1, 0.55f) : Color.white;
+            body.color = flicker ? new Color(Tint.r, Tint.g, Tint.b, 0.55f) : Tint;
 
             // hit flash, rage pulse, ultimate glow
             Flash = Mathf.MoveTowards(Flash, 0, dt * 7f);

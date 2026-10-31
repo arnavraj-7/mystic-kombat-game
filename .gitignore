@@ -27,3 +27,7 @@ tools/simtest/obj/
 autotest/
 art/downloads/
 __pycache__/
+art/raw/
+art/canvas/
+art/qa/
+*.pyc

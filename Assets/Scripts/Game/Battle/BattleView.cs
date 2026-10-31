@@ -19,7 +19,7 @@ namespace MysticKombat
         SpriteRenderer sky, mid, floorShade;
         float skyH, midH;
         Vector3 camPos;
-        float camSize = 3.7f, shake, ultZoom, flashScreen;
+        float camSize = 3.4f, shake, ultZoom, flashScreen;
         public bool ShowBoxes;
         readonly List<SpriteRenderer> boxes = new List<SpriteRenderer>();
         int boxesUsed;
@@ -27,7 +27,7 @@ namespace MysticKombat
         readonly ArenaDef arena;
         Color tint = Color.white;
 
-        public const float BaseSize = 3.7f;
+        public const float BaseSize = 3.4f;
 
         sealed class Fx
         {
@@ -54,6 +54,7 @@ namespace MysticKombat
             if (arena != null) tint = AssetDb.Hex(arena.Tint, Color.white);
             BuildArena(arena != null ? arena.Id : "none");
             for (int i = 0; i < 2; i++) fighters[i] = new FighterView(Root.transform, sim.F[i], i);
+            if (sim.F[0].Def.Id == sim.F[1].Def.Id) fighters[1].Tint = new Color(0.62f, 0.72f, 1f); // mirror match: shadow self
             camPos = new Vector3(0, 0, -10);
             cam.orthographicSize = BaseSize;
         }
@@ -525,7 +526,7 @@ namespace MysticKombat
             var b = sim.F[1];
             float mx = (a.X + b.X) * 0.5f;
             float sep = Mathf.Abs(a.X - b.X);
-            float targetSize = Mathf.Clamp(2.9f + sep * 0.16f, 3.2f, BaseSize);
+            float targetSize = Mathf.Clamp(2.55f + sep * 0.16f, 2.9f, BaseSize);
             float halfW = targetSize * cam.aspect;
             float maxX = Mathf.Max(0, sim.R.StageHalfWidth + 0.6f - halfW);
             float tx = Mathf.Clamp(mx, -maxX, maxX);
