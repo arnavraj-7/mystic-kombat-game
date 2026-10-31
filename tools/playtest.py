@@ -120,11 +120,39 @@ def shot(hwnd, out, name):
     print("shot", path, img.size, flush=True)
 
 
+def training_ult(hwnd, a):
+    """Training: P1 vs standing dummy with infinite Ki; walk in and fire every special and the ultimate."""
+    for _ in range(5):
+        tap("s")           # -> TRAINING
+    tap("enter")
+    time.sleep(1.0)
+    for _ in range(a.fighter_steps):
+        tap("d")
+    tap("f")               # P1
+    time.sleep(0.4)
+    tap("d")
+    tap("f")               # dummy
+    time.sleep(2.5)
+    shot(hwnd, a.out, "t01_training")
+    hold(["d"], 0.9)
+    for i, k in enumerate(["h", "r", "t"]):
+        tap(k, after=0.15)
+        shot(hwnd, a.out, f"t1{i}_special_{k}")
+        time.sleep(1.3)
+    tap("y", after=0.05)       # ultimate (Ki is refilled in training)
+    for i in range(8):
+        time.sleep(0.35)
+        shot(hwnd, a.out, f"t2{i}_ultimate")
+    time.sleep(2)
+    shot(hwnd, a.out, "t30_after_ult")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--exe", default="Builds/Windows/MysticKombat.exe")
     ap.add_argument("--out", default="autotest/playtest")
     ap.add_argument("--fighter-steps", type=int, default=0, help="move right N tiles on char select")
+    ap.add_argument("--flow", default="vscpu", choices=["vscpu", "training-ult"])
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     proc = subprocess.Popen([os.path.abspath(a.exe), "-screen-fullscreen", "0", "-screen-width", "1600", "-screen-height", "900",
@@ -140,6 +168,10 @@ def main():
     tap("enter")           # title -> main menu
     time.sleep(1.0)
     shot(hwnd, a.out, "02_main_menu")
+    if a.flow == "training-ult":
+        training_ult(hwnd, a)
+        proc.terminate()
+        return
     tap("s"); tap("s")     # ARCADE -> VERSUS -> VERSUS CPU
     shot(hwnd, a.out, "03_menu_vs_cpu")
     tap("enter")

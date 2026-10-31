@@ -76,6 +76,8 @@ namespace MysticKombat
             menu = new MenuList(Root, 0.68f, 0.19f, 700, 64, 42);
             if (cfg.Mode == GameMode.Arcade)
             {
+                if (banner == "GAME OVER")
+                    menu.Add("CONTINUE  (SCORE -50%)", () => { cfg.ArcadeScore /= 2; cfg.Seed++; App.Go(new ArcadeScreen(cfg)); });
                 menu.Add("MAIN MENU", () => App.Go(new MainMenuScreen()));
                 menu.Add("PLAY ARCADE AGAIN", () => { var c = cfg.Clone(); c.Mode = GameMode.Arcade; App.Go(new CharSelectScreen(c)); });
             }

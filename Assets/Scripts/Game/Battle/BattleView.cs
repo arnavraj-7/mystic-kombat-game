@@ -389,6 +389,23 @@ namespace MysticKombat
                     continue;
                 }
                 BattleSim.HitboxWorld(f, out float cx, out float cy, out float w, out float h);
+                if (m.Vfx == "stretch_arm")
+                {
+                    // rubber arm: a skin-tone band from the shoulder out to the fist, snapping back in recovery
+                    float reach = Mathf.Clamp01((f.MoveFrame - m.Startup + 4f) / 4f) * (1f - Mathf.Clamp01((f.MoveFrame - m.Startup - m.Active) / 6f));
+                    float far = (cx - f.X) * f.Facing + w * 0.5f;
+                    float len = Mathf.Max(0.1f, (far - 0.5f) * reach);
+                    r.sharedMaterial = DefaultMat;
+                    r.sprite = AssetDb.White;
+                    r.color = new Color(0.98f, 0.78f, 0.62f);
+                    r.transform.position = new Vector3(f.X + f.Facing * (0.5f + len * 0.5f), f.Y + 1.38f, 0);
+                    r.transform.localScale = new Vector3(len, 0.13f, 1);
+                    r.transform.rotation = Quaternion.identity;
+                    if (reach > 0.9f && Random.value < 0.3f)
+                        Spawn(AssetDb.SoftCircle, new Vector2(f.X + f.Facing * (0.5f + len), f.Y + 1.38f), 0.35f, 0.6f, 0.12f, new Color(1f, 0.9f, 0.7f), true);
+                    continue;
+                }
+                r.sharedMaterial = Additive;
                 var sp = AssetDb.Vfx(m.Vfx);
                 r.sprite = sp;
                 r.color = Color.white;

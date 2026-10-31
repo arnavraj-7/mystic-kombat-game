@@ -72,7 +72,7 @@
       "description": "Stretchy pirate with the longest punches in the multiverse. Eats a whole feast mid-fight to recover.",
       "power": 0.95, "hp": 1020, "walkSpeed": 3.6, "jumpVel": 15, "weight": 0.9, "defense": 0.95,
       "moves": {
-        "special1": { "name": "Stretch Pistol", "pose": "special1", "slot": "special1", "startup": 12, "active": 5, "recovery": 24, "damage": 80, "hitstun": 20, "hitstop": 9, "kbX": 3, "hitbox": [2.4, 1.35, 3.4, 0.5], "sfx": "whoosh_heavy", "charges": 2, "recharge": 300 },
+        "special1": { "name": "Stretch Pistol", "pose": "special1", "slot": "special1", "startup": 12, "active": 5, "recovery": 24, "damage": 80, "hitstun": 20, "hitstop": 9, "kbX": 3, "hitbox": [2.4, 1.35, 3.4, 0.5], "vfx": "stretch_arm", "sfx": "whoosh_heavy", "charges": 2, "recharge": 300 },
         "special2": { "name": "Gatling Fists", "pose": "special2", "slot": "special2", "startup": 10, "active": 32, "recovery": 20, "hits": 8, "hitInterval": 4, "damage": 14, "hitstun": 16, "hitstop": 3, "kbX": 0.5, "hitbox": [1.6, 1.3, 2.4, 1.1], "vfx": "hit_spark", "sfx": "hit_light", "charges": 1, "recharge": 480 },
         "special3": { "name": "Meat Feast", "pose": "special3", "slot": "special3", "kind": "none", "startup": 8, "active": 60, "recovery": 16, "heal": { "amount": 130, "from": 8, "to": 68 }, "vfx": "heal", "sfx": "heal", "charges": 1, "recharge": 0 },
         "ultimate": { "name": "Titan Fist", "pose": "ultimate", "slot": "ultimate", "cinematic": true, "startup": 24, "active": 6, "recovery": 34, "damage": 330, "chip": 60, "hitstun": 40, "hitstop": 20, "kbX": 9, "launch": true, "armor": [0, 24], "hitbox": [2.6, 1.5, 4.6, 2.6], "vfx": "shockwave", "sfx": "explosion" }
