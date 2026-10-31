@@ -98,6 +98,8 @@ namespace MysticKombat
                 case FState.GetUp: return "crouch";
                 case FState.KO: return "ko";
                 case FState.Victory: return "victory";
+                case FState.Dash: return "walk_1";
+                case FState.BackDash: return "walk_0";
             }
             return "idle_0";
         }
@@ -122,6 +124,8 @@ namespace MysticKombat
                 if (m.Slot == "crouch_light") { sy = 1f; pos.x += f.Facing * (mf >= m.Startup && mf < m.Startup + m.Active ? 0.25f : 0f); }
             }
             if (f.State == FState.Hitstun || f.State == FState.Thrown) rot = 6f;
+            if (f.State == FState.Dash) { rot = -8f; pos.y += 0.05f; }
+            if (f.State == FState.BackDash) { rot = 8f; pos.y += Mathf.Sin(Mathf.Clamp01(f.StateFrame / 14f) * Mathf.PI) * 0.35f; }
             if (f.State == FState.Tumble)
             {
                 tumbleSpin += dt * 360f * (f.VY > 0 ? 1.4f : 0.9f);
@@ -177,11 +181,12 @@ namespace MysticKombat
             shadow.transform.localScale = new Vector3(1.3f * (1f - height * 0.5f), 0.22f * (1f - height * 0.5f), 1);
 
             // afterimages for dashes / clones / ultimates
-            bool trail = f.State == FState.Attack && f.Move != null && (f.Move.Afterimages || ulting || f.Move.MoveX > 8) ;
+            bool trail = (f.State == FState.Attack && f.Move != null && (f.Move.Afterimages || ulting || f.Move.MoveX > 8)) || f.State == FState.Dash || f.State == FState.BackDash;
             ghostTimer -= dt;
             if (trail && ghostTimer <= 0)
             {
-                ghostTimer = f.Move.Vfx == "clones" ? 0.035f : 0.05f;
+                bool clones = f.Move != null && f.Move.Vfx == "clones";
+                ghostTimer = clones ? 0.035f : 0.05f;
                 var g = ghosts[ghostNext];
                 ghostNext = (ghostNext + 1) % ghosts.Count;
                 g.gameObject.SetActive(true);
@@ -189,8 +194,8 @@ namespace MysticKombat
                 g.transform.position = root.position;
                 g.transform.localScale = body.transform.localScale;
                 g.transform.rotation = body.transform.rotation;
-                g.color = f.Move.Vfx == "clones" ? new Color(1f, 0.6f, 0.2f, 0.8f) : new Color(color.r, color.g, color.b, 0.6f);
-                if (f.Move.Vfx == "clones")
+                g.color = new Color(color.r, color.g, color.b, 0.6f);
+                if (clones)
                 {
                     // shadow clones: solid copies of the fighter, not silhouettes
                     g.sharedMaterial = body.sharedMaterial;

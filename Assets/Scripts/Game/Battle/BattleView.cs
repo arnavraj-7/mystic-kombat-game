@@ -302,6 +302,17 @@ namespace MysticKombat
                         Spawn(AssetDb.Vfx("shield"), new Vector2(e.X, e.Y), 0.8f, 1.6f, 0.2f, Color.cyan, true);
                         audio.Sfx("shield");
                         break;
+                    case Ev.Dash:
+                        Dust(e.X - e.Value * sim.F[e.Who].Facing * 0.4f, 0.6f);
+                        audio.Sfx("whoosh_light", 0.6f, 1.2f);
+                        break;
+                    case Ev.WallSplat:
+                        Spawn(AssetDb.Vfx("hit_spark_heavy"), new Vector2(e.X, e.Y), 1.4f, 3.2f, 0.35f, new Color(1f, 0.8f, 0.5f), true);
+                        Spawn(AssetDb.Circle, new Vector2(e.X, e.Y), 0.4f, 3f, 0.3f, new Color(1, 1, 1, 0.7f), true);
+                        fighters[e.Who].Callout("WALL SPLAT!");
+                        shake = Mathf.Max(shake, 0.35f);
+                        audio.Sfx("hit_heavy", 1f, 0.7f);
+                        break;
                     case Ev.KO:
                         flashScreen = 1f;
                         shake = 0.4f;

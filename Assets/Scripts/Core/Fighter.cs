@@ -2,12 +2,12 @@ using System;
 
 namespace MysticKombat.Core
 {
-    public enum FState { Intro, Idle, Walk, Crouch, PreJump, Air, Attack, Landing, Hitstun, Blockstun, Tumble, Knockdown, GetUp, Thrown, KO, Victory }
+    public enum FState { Intro, Idle, Walk, Crouch, PreJump, Air, Attack, Landing, Hitstun, Blockstun, Tumble, Knockdown, GetUp, Thrown, KO, Victory, Dash, BackDash }
 
     public sealed class MatchStats
     {
         public float DamageDealt, Healed, KiFromOrbs;
-        public int Hits, Blocks, Specials, Ults, UltHits, Throws, ThrowBreaks, Counters, MaxCombo, OrbsTaken, Projectiles;
+        public int Hits, Blocks, Specials, Ults, UltHits, Throws, ThrowBreaks, Counters, MaxCombo, OrbsTaken, Projectiles, Dashes, WallSplats;
     }
 
     /// <summary>Runtime state of one fighter inside a <see cref="BattleSim"/>.</summary>
@@ -34,7 +34,7 @@ namespace MysticKombat.Core
         public int Stun, Hitstop, Invuln;
         public int ComboCount, JuggleCount;
         public float ComboDamage;
-        public bool JuggleLocked;
+        public bool JuggleLocked, WallSplatUsed;
 
         // abilities (Valorant-style charges per special slot)
         public readonly int[] Charges = new int[3];
@@ -80,6 +80,7 @@ namespace MysticKombat.Core
             ComboCount = JuggleCount = 0;
             ComboDamage = 0;
             JuggleLocked = false;
+            WallSplatUsed = false;
             BuffDamage = BuffSpeed = 1f;
             BuffTimer = 0;
             BuffArmor = false;

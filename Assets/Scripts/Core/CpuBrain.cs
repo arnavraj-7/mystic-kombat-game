@@ -85,6 +85,7 @@ namespace MysticKombat.Core
         int throwDecided = -1;
         bool throwBreak;
         int pendingPressAt = -1;
+        int dashStep; Btn dashDir;
         Btn pendingPress;
 
         public CpuBrain(int index, int level, uint seed)
@@ -135,6 +136,15 @@ namespace MysticKombat.Core
                 holdTimer = 0;
                 pendingPressAt = -1;
                 return Btn.None;
+            }
+
+            // double-tap dash in progress (forward-neutral-forward)
+            if (dashStep > 0)
+            {
+                dashStep++;
+                if (dashStep == 2) return Btn.None;
+                dashStep = 0;
+                return dashDir;
             }
 
             // a scheduled press (reaction-delayed decisions)
@@ -344,11 +354,23 @@ namespace MysticKombat.Core
                         if (rng.Chance(0.012f + (1 - Level * 0.1f) * 0.01f)) { holdDir = Btn.Up | Fwd(me); holdTimer = 5; return holdDir; }
                         int s = FindSpecial(me, m => m.TeleportMode != null || m.MoveX > 6);
                         if (s >= 0 && dist < 5f && rng.Chance(SpecialP[Level] * 0.03f)) return SlotBtn(s);
+                        if (Level >= 1 && dist > 3.2f && me.State == FState.Idle && rng.Chance(0.02f + Level * 0.015f))
+                        {
+                            dashStep = 1;
+                            dashDir = Fwd(me);
+                            return dashDir;
+                        }
                         return Fwd(me);
                     }
                     State = Mode.Pressure;
                     return Btn.None;
                 case Mode.Retreat:
+                    if (dist < 2.5f && Level >= 2 && me.State == FState.Idle && rng.Chance(0.05f))
+                    {
+                        dashStep = 1;
+                        dashDir = Back(me);
+                        return dashDir;
+                    }
                     if (dist < 4.5f) return Back(me);
                     State = Mode.Neutral;
                     return Btn.None;

@@ -25,7 +25,7 @@
     {
       "id": "kazu", "name": "Kazu Kitsune", "title": "The Orange Fox Ninja", "color": "#FF8A1E", "archetype": "Rushdown",
       "description": "Relentless ninja who overwhelms with clones and a spinning chakra orb. Heals once per round by drawing in nature energy.",
-      "hp": 1000, "walkSpeed": 3.8, "backSpeed": 3.0, "jumpVel": 14.5, "power": 1.0, "kiGain": 1.05,
+      "hp": 1000, "walkSpeed": 3.8, "backSpeed": 3.0, "jumpVel": 14.5, "power": 1.04, "kiGain": 1.05,
       "moves": {
         "special1": { "name": "Shadow Clone Rush", "pose": "special1", "slot": "special1", "startup": 10, "active": 24, "recovery": 18, "moveX": 9, "hits": 3, "hitInterval": 8, "damage": 36, "hitstun": 18, "blockstun": 12, "kbX": 1.2, "hitbox": [0.6, 1.1, 1.2, 1.4], "afterimages": true, "vfx": "clones", "sfx": "whoosh_heavy", "charges": 2, "recharge": 360 },
         "special2": { "name": "Spiral Orb", "pose": "special2", "slot": "special2", "startup": 14, "active": 10, "recovery": 22, "moveStartupX": 3, "moveX": 6, "hits": 4, "hitInterval": 3, "damage": 28, "hitstun": 22, "hitstop": 5, "kbX": 1.0, "knockdown": true, "hitbox": [0.9, 1.2, 1.0, 1.0], "vfx": "spiral_orb", "sfx": "ki_charge", "charges": 1, "recharge": 600 },
@@ -36,7 +36,7 @@
     {
       "id": "goro", "name": "Goro Kaiten", "title": "Starborn Brawler", "color": "#FFB000", "archetype": "All-rounder",
       "description": "Cheerful powerhouse with a ki volley, an instant-step teleport and the stage-splitting Heaven-Splitter Wave.",
-      "hp": 1000, "walkSpeed": 3.5, "jumpVel": 14.5, "power": 1.05,
+      "hp": 1000, "walkSpeed": 3.5, "jumpVel": 14.5, "power": 0.98,
       "moves": {
         "special1": { "name": "Ki Volley", "pose": "special1", "slot": "special1", "kind": "projectile", "startup": 12, "active": 20, "recovery": 18, "projectile": { "vfx": "ki_blast", "speed": 11, "w": 0.55, "h": 0.55, "y": 1.35, "count": 3, "interval": 9, "spreadY": 0.22, "damage": 30, "hitstun": 15, "kbX": 1.2 }, "sfx": "ki_blast", "charges": 2, "recharge": 300 },
         "special2": { "name": "Instant Step", "pose": "special2", "slot": "special2", "startup": 14, "active": 4, "recovery": 18, "teleport": { "mode": "behind", "dist": 1.2, "frame": 8 }, "invuln": [0, 10], "damage": 85, "hitstun": 22, "kbX": 2.5, "launch": true, "hitbox": [0.8, 1.3, 1.1, 0.9], "vfx": "teleport", "sfx": "teleport", "charges": 1, "recharge": 480 },
@@ -47,7 +47,7 @@
     {
       "id": "shin", "name": "Shin Ippatsu", "title": "The Caped Baldy", "color": "#FFE14D", "archetype": "Powerhouse",
       "description": "Bored hero whose normal punches are already too strong. Slow to charge Ki, but one Serious Punch ends rounds.",
-      "hp": 1050, "walkSpeed": 3.0, "backSpeed": 2.4, "jumpVel": 14, "power": 1.12, "defense": 0.95, "kiGain": 0.95,
+      "hp": 1050, "walkSpeed": 3.0, "backSpeed": 2.4, "jumpVel": 14, "power": 1.26, "defense": 0.95, "kiGain": 0.95,
       "moves": {
         "special1": { "name": "Serious Side-Steps", "pose": "special1", "slot": "special1", "kind": "none", "startup": 6, "active": 8, "recovery": 10, "teleport": { "mode": "forward", "dist": 2.2, "frame": 6 }, "invuln": [0, 18], "afterimages": true, "sfx": "teleport", "charges": 2, "recharge": 300 },
         "special2": { "name": "Consecutive Normal Punches", "pose": "special2", "slot": "special2", "startup": 9, "active": 30, "recovery": 20, "moveX": 1.5, "hits": 8, "hitInterval": 4, "damage": 15, "hitstun": 16, "hitstop": 3, "kbX": 0.6, "hitbox": [0.9, 1.3, 1.25, 1.0], "vfx": "hit_spark", "sfx": "hit_light", "charges": 1, "recharge": 540 },
@@ -59,7 +59,7 @@
     {
       "id": "zevrin", "name": "Zevrin", "title": "The Fused Prince", "color": "#3D7BFF", "archetype": "Technical",
       "description": "Two warriors fused into one arrogant prince. Spirit Sword pokes, arcing Ki bombs and a reflecting barrier.",
-      "hp": 1000, "walkSpeed": 3.6, "jumpVel": 14.5, "power": 1.12, "defense": 1.0,
+      "hp": 1000, "walkSpeed": 3.6, "jumpVel": 14.5, "power": 1.16, "defense": 1.0,
       "moves": {
         "special1": { "name": "Spirit Sword", "pose": "special1", "slot": "special1", "startup": 9, "active": 6, "recovery": 18, "moveStartupX": 6, "damage": 95, "hitstun": 21, "hitstop": 10, "kbX": 3, "hitbox": [1.2, 1.3, 1.8, 0.6], "vfx": "slash_arc", "sfx": "slash", "charges": 2, "recharge": 420 },
         "special2": { "name": "Twin Ki Bombs", "pose": "special2", "slot": "special2", "kind": "projectile", "startup": 14, "active": 12, "recovery": 22, "projectile": { "vfx": "ki_blast", "speed": 8, "vy": 7, "gravity": 12, "w": 0.8, "h": 0.8, "y": 1.6, "scale": 1.3, "count": 2, "interval": 10, "damage": 48, "hitstun": 20, "kbX": 2, "kbY": 6, "strength": 1.5 }, "sfx": "ki_blast", "charges": 1, "recharge": 420 },
@@ -70,7 +70,7 @@
     {
       "id": "rio", "name": "Rio Gomu", "title": "Rubber Pirate", "color": "#E8322E", "archetype": "Long-range brawler",
       "description": "Stretchy pirate with the longest punches in the multiverse. Eats a whole feast mid-fight to recover.",
-      "hp": 1020, "walkSpeed": 3.6, "jumpVel": 15, "weight": 0.9, "defense": 0.95,
+      "power": 0.95, "hp": 1020, "walkSpeed": 3.6, "jumpVel": 15, "weight": 0.9, "defense": 0.95,
       "moves": {
         "special1": { "name": "Stretch Pistol", "pose": "special1", "slot": "special1", "startup": 12, "active": 5, "recovery": 24, "damage": 80, "hitstun": 20, "hitstop": 9, "kbX": 3, "hitbox": [2.4, 1.35, 3.4, 0.5], "sfx": "whoosh_heavy", "charges": 2, "recharge": 300 },
         "special2": { "name": "Gatling Fists", "pose": "special2", "slot": "special2", "startup": 10, "active": 32, "recovery": 20, "hits": 8, "hitInterval": 4, "damage": 14, "hitstun": 16, "hitstop": 3, "kbX": 0.5, "hitbox": [1.6, 1.3, 2.4, 1.1], "vfx": "hit_spark", "sfx": "hit_light", "charges": 1, "recharge": 480 },
@@ -81,7 +81,7 @@
     {
       "id": "kuro", "name": "Kuro Ryuga", "title": "Soul Cleaver", "color": "#C21A2B", "archetype": "Swordsman",
       "description": "Reaper with a cleaver-sized blade. Fires crescent slash waves and dons a hollow mask for armoured power.",
-      "hp": 1000, "walkSpeed": 3.5, "jumpVel": 14.5, "power": 1.06,
+      "hp": 1000, "walkSpeed": 3.5, "jumpVel": 14.5, "power": 1.02,
       "moves": {
         "heavy": { "name": "Cleaver Swing", "hitbox": [1.1, 1.25, 1.6, 0.8], "startup": 12, "damage": 72 },
         "special1": { "name": "Crescent Fang", "pose": "special1", "slot": "special1", "kind": "projectile", "startup": 15, "active": 1, "recovery": 24, "projectile": { "vfx": "crescent", "speed": 12, "w": 1.0, "h": 1.8, "y": 1.2, "damage": 85, "hitstun": 22, "kbX": 3, "strength": 2 }, "sfx": "slash", "charges": 2, "recharge": 420 },
@@ -93,7 +93,7 @@
     {
       "id": "sho", "name": "Sho Raikiri", "title": "Lightning Avenger", "color": "#6A4CFF", "archetype": "Speed / counter",
       "description": "Fast, fragile avenger. Lightning thrusts, fire breath, a reading counter and a Kirin bolt you must dodge, not block.",
-      "hp": 960, "walkSpeed": 3.9, "backSpeed": 3.1, "jumpVel": 15, "power": 1.05,
+      "hp": 960, "walkSpeed": 3.9, "backSpeed": 3.1, "jumpVel": 15, "power": 0.92,
       "moves": {
         "special1": { "name": "Chirping Blade", "pose": "special1", "slot": "special1", "startup": 10, "active": 12, "recovery": 20, "moveX": 12, "damage": 100, "hitstun": 22, "hitstop": 11, "kbX": 3.5, "knockdown": true, "hitbox": [0.9, 1.3, 1.2, 0.8], "vfx": "lightning", "sfx": "lightning", "charges": 2, "recharge": 420 },
         "special2": { "name": "Fire Dragon Breath", "pose": "special2", "slot": "special2", "kind": "projectile", "startup": 16, "active": 1, "recovery": 24, "projectile": { "vfx": "fireball", "speed": 9, "w": 1.2, "h": 1.2, "y": 1.4, "damage": 80, "hitstun": 21, "kbX": 3, "strength": 1.5 }, "sfx": "explosion", "charges": 2, "recharge": 360 },
@@ -105,7 +105,7 @@
     {
       "id": "ren", "name": "Ren Mugen", "title": "Infinity Sorcerer", "color": "#4FD8FF", "archetype": "Zoner / glass cannon",
       "description": "The strongest sorcerer alive. Pulls with Blue, blasts with Red, and nothing touches him inside Infinity.",
-      "hp": 960, "walkSpeed": 3.4, "jumpVel": 14, "power": 1.1, "kiGain": 1.1,
+      "hp": 1000, "walkSpeed": 3.4, "jumpVel": 14, "power": 1.28, "kiGain": 1.1,
       "moves": {
         "special1": { "name": "Blue Pull", "pose": "special1", "slot": "special1", "kind": "projectile", "startup": 12, "active": 1, "recovery": 22, "projectile": { "vfx": "blue_orb", "speed": 7, "w": 1.0, "h": 1.0, "y": 1.3, "damage": 45, "hitstun": 26, "kbX": -4, "strength": 1.5 }, "sfx": "ki_charge", "charges": 2, "recharge": 360 },
         "special2": { "name": "Red Push", "pose": "special2", "slot": "special2", "startup": 12, "active": 4, "recovery": 22, "damage": 90, "hitstun": 22, "hitstop": 12, "kbX": 9, "knockdown": true, "hitbox": [1.0, 1.3, 1.6, 1.4], "vfx": "red_orb", "sfx": "explosion", "charges": 2, "recharge": 420 },
@@ -116,7 +116,7 @@
     {
       "id": "kai", "name": "Kai Hinomizu", "title": "Breathing Swordsman", "color": "#2BB5A0", "archetype": "Balanced swordsman",
       "description": "Kind-hearted swordsman of flowing water forms. Invincible Water Wheel anti-air and a sun-dragon finisher.",
-      "hp": 1000, "walkSpeed": 3.6, "jumpVel": 14.5,
+      "power": 0.97, "hp": 1000, "walkSpeed": 3.6, "jumpVel": 14.5,
       "moves": {
         "heavy": { "name": "Water Slash", "hitbox": [1.05, 1.2, 1.5, 0.7] },
         "special1": { "name": "Water Wheel", "pose": "special1", "slot": "special1", "startup": 6, "active": 14, "recovery": 20, "moveX": 3, "moveY": 13, "damage": 90, "hitstun": 22, "hitstop": 9, "kbX": 2, "launch": true, "invuln": [0, 8], "hitbox": [0.7, 1.6, 1.4, 1.8], "vfx": "water_wheel", "sfx": "slash", "charges": 2, "recharge": 360 },
@@ -128,7 +128,7 @@
     {
       "id": "hana", "name": "Hana Sakuraba", "title": "Cherry Blossom Medic", "color": "#FF6FB5", "archetype": "Bruiser / healer",
       "description": "Medic-ninja with monstrous strength. Cracks the earth, throws blossom kunai and heals better than anyone.",
-      "hp": 950, "walkSpeed": 3.5, "jumpVel": 14.5, "power": 1.06,
+      "hp": 950, "walkSpeed": 3.5, "jumpVel": 14.5, "power": 0.97,
       "moves": {
         "special1": { "name": "Cherry Quake", "pose": "special1", "slot": "special1", "startup": 16, "active": 6, "recovery": 22, "damage": 95, "hitstun": 22, "hitstop": 10, "kbX": 2, "kbY": 8, "height": "low", "hitbox": [1.6, 0.3, 3.2, 0.6], "vfx": "shockwave", "sfx": "explosion", "charges": 2, "recharge": 420 },
         "special2": { "name": "Healing Palm", "pose": "special2", "slot": "special2", "kind": "none", "startup": 10, "active": 70, "recovery": 14, "heal": { "amount": 130, "from": 10, "to": 80 }, "vfx": "heal", "sfx": "heal", "charges": 1, "recharge": 900 },

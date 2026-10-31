@@ -25,6 +25,7 @@ static class Program
         switch (cmd)
         {
             case "determinism": return Determinism(g);
+            case "tune": Tune(g, args.Length > 1 ? int.Parse(args[1]) : 8); return 0;
             case "trace": Trace(g, args.Length > 1 ? args[1] : "kazu", args.Length > 2 ? args[2] : "goro", args.Length > 3 ? int.Parse(args[3]) : 3); return 0;
             default: Balance(g, args.Length > 1 ? int.Parse(args[1]) : 10, args.Length > 2 ? int.Parse(args[2]) : 3); return 0;
         }
@@ -122,6 +123,42 @@ static class Program
             foreach (var a in ids) { var r = RunMatch(g, a, "malgrath", 3, 2, 55u); if (r.Winner == 1) bw++; }
             Console.WriteLine($"Boss (Hard AI) beats Mystic-AI roster: {bw}/{ids.Count}");
         }
+    }
+
+    /// <summary>Nudge each fighter's power toward a 50% win rate over several round-robin passes.</summary>
+    static void Tune(Grimoire g, int iters)
+    {
+        var ids = g.Fighters.Where(f => !f.Boss).Select(f => f.Id).ToList();
+        uint seed = 500;
+        for (int it = 0; it < iters; it++)
+        {
+            var wins = ids.ToDictionary(i => i, i => 0);
+            var games = ids.ToDictionary(i => i, i => 0);
+            foreach (var a in ids)
+                foreach (var b in ids)
+                {
+                    if (a == b) continue;
+                    for (int k = 0; k < 12; k++)
+                    {
+                        int lv = 1 + k % 3;
+                        var r = RunMatch(g, a, b, lv, lv, seed++);
+                        games[a]++; games[b]++;
+                        if (r.Winner == 0) wins[a]++; else if (r.Winner == 1) wins[b]++;
+                    }
+                }
+            var sb = new System.Text.StringBuilder($"iter {it}: ");
+            float spread = 0;
+            foreach (var id in ids)
+            {
+                float w = wins[id] / (float)games[id];
+                spread = Math.Max(spread, Math.Abs(w - 0.5f));
+                var f = g.Get(id);
+                f.Power = (float)Math.Round(Math.Clamp(f.Power * (1f + 0.22f * (0.5f - w)), 0.85f, 1.3f), 3);
+                sb.Append($"{id} {w * 100:F0}% ");
+            }
+            Console.WriteLine(sb + $" (max dev {spread * 100:F0})");
+        }
+        Console.WriteLine("POWERS " + string.Join(" ", ids.Select(i => i + "=" + g.Get(i).Power.ToString(System.Globalization.CultureInfo.InvariantCulture))));
     }
 
     static void Acc(MatchStats t, MatchStats s)

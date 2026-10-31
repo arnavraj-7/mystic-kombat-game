@@ -7,7 +7,7 @@ namespace MysticKombat.Core
     {
         RoundIntro, Fight, Hit, Block, ShieldBlock, Armor, Whiff, MoveStart, ProjectileSpawn, Clash,
         Jump, Land, Knockdown, KO, RoundOver, MatchOver, TimeUp, UltStart, UltConnect, Heal, Buff,
-        Counter, Throw, ThrowBreak, OrbSpawn, OrbTaken, Teleport, Rage, Reflect, ChargeReady
+        Counter, Throw, ThrowBreak, OrbSpawn, OrbTaken, Teleport, Rage, Reflect, ChargeReady, Dash, WallSplat
     }
 
     public struct SimEvent
@@ -169,9 +169,25 @@ namespace MysticKombat.Core
                 case FState.Crouch:
                     if (!fighting) { Friction(f, 30f); break; }
                     FaceOpponent(f, o);
-                    f.ComboCount = 0; f.JuggleCount = 0; f.ComboDamage = 0; f.JuggleLocked = false; f.ChainCount = 0;
+                    f.ComboCount = 0; f.JuggleCount = 0; f.ComboDamage = 0; f.JuggleLocked = false; f.ChainCount = 0; f.WallSplatUsed = false;
                     if (TryStartMove(f, o, false)) break;
                     int np = InputHistory.Numpad(inp.Current, f.Facing);
+                    int prevNp = InputHistory.Numpad(inp.Previous, f.Facing);
+                    // Tekken-style dashes: double-tap forward / back
+                    if (np == 6 && prevNp != 6 && inp.Motion("656", f.Facing, 14))
+                    {
+                        f.SetState(FState.Dash);
+                        f.Stats.Dashes++;
+                        Emit(Ev.Dash, f.Index, f.X, f.Y, 1);
+                        break;
+                    }
+                    if (np == 4 && prevNp != 4 && inp.Motion("454", f.Facing, 14))
+                    {
+                        f.SetState(FState.BackDash);
+                        f.Stats.Dashes++;
+                        Emit(Ev.Dash, f.Index, f.X, f.Y, -1);
+                        break;
+                    }
                     if (np >= 7)
                     {
                         f.SetState(FState.PreJump);
@@ -214,6 +230,16 @@ namespace MysticKombat.Core
                     break;
                 case FState.Attack:
                     TickMove(f, o);
+                    break;
+                case FState.Dash:
+                    f.VX = f.Facing * 10f * f.BuffSpeed;
+                    if (f.StateFrame >= 4 && fighting && TryStartMove(f, o, false)) break;
+                    if (f.StateFrame >= 14) { f.VX = 0; f.SetState(FState.Idle); }
+                    break;
+                case FState.BackDash:
+                    f.VX = -f.Facing * (f.StateFrame < 12 ? 9f : 2f);
+                    if (f.StateFrame <= 8) f.Invuln = Math.Max(f.Invuln, 1);
+                    if (f.StateFrame >= 18) { f.VX = 0; f.SetState(FState.Idle); }
                     break;
                 case FState.Landing:
                     Friction(f, 40f);
@@ -291,6 +317,17 @@ namespace MysticKombat.Core
                 }
             }
             float lim = R.StageHalfWidth - f.Def.Width * 0.5f;
+            if ((f.X < -lim || f.X > lim) && f.State == FState.Tumble && Math.Abs(f.VX) > 5f && !f.WallSplatUsed && f.Hp > 0)
+            {
+                // wall splat: slam into the arena edge and bounce back into a juggle
+                f.WallSplatUsed = true;
+                f.JuggleLocked = false;
+                f.VX = -Math.Sign(f.VX) * 2.5f;
+                f.VY = Math.Max(f.VY, 8f);
+                f.Y = Math.Max(f.Y, 0.3f);
+                f.Stats.WallSplats++;
+                Emit(Ev.WallSplat, f.Index, f.X, f.Y + 1f);
+            }
             if (f.X < -lim) { f.X = -lim; if (f.VX < 0) f.VX = 0; }
             if (f.X > lim) { f.X = lim; if (f.VX > 0) f.VX = 0; }
         }
