@@ -1,0 +1,66 @@
+{
+  "idle_0": {
+    "pivotX": 0.4875,
+    "pivotY": 0.0152
+  },
+  "idle_1": {
+    "pivotX": 0.4875,
+    "pivotY": 0.0152
+  },
+  "walk_0": {
+    "pivotX": 0.4926,
+    "pivotY": 0.0152
+  },
+  "walk_1": {
+    "pivotX": 0.4917,
+    "pivotY": 0.0152
+  },
+  "crouch": {
+    "pivotX": 0.4593,
+    "pivotY": 0.0219
+  },
+  "jump": {
+    "pivotX": 0.4767,
+    "pivotY": 0.0179
+  },
+  "light": {
+    "pivotX": 0.4017,
+    "pivotY": 0.0152
+  },
+  "heavy": {
+    "pivotX": 0.2897,
+    "pivotY": 0.0152
+  },
+  "special1": {
+    "pivotX": 0.5071,
+    "pivotY": 0.0152
+  },
+  "special2": {
+    "pivotX": 0.4952,
+    "pivotY": 0.0152
+  },
+  "special3": {
+    "pivotX": 0.059,
+    "pivotY": 0.0152
+  },
+  "ultimate": {
+    "pivotX": 0.4949,
+    "pivotY": 0.0152
+  },
+  "hit": {
+    "pivotX": 0.5792,
+    "pivotY": 0.0152
+  },
+  "block": {
+    "pivotX": 0.4913,
+    "pivotY": 0.0152
+  },
+  "ko": {
+    "pivotX": 0.4598,
+    "pivotY": 0.0667
+  },
+  "victory": {
+    "pivotX": 0.4649,
+    "pivotY": 0.0152
+  }
+}
