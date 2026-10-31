@@ -92,9 +92,9 @@ namespace MysticKombat
             trainingPanel = Ui.Rect(root, "training").Place(1f, 0.5f, 520, 560, 1f, 0.5f, -16, 0);
             var tp = Ui.Box(trainingPanel, new Color(0, 0, 0, 0.62f));
             tp.rectTransform.Fill();
-            frameData = Ui.Text(trainingPanel, "", 22, Color.white, TextAnchor.UpperLeft);
+            frameData = Ui.Text(trainingPanel, "", 20, Color.white, TextAnchor.UpperLeft).Mono();
             frameData.rectTransform.Fill(16, 250, 16, 14);
-            inputHist = Ui.Text(trainingPanel, "", 22, new Color(0.8f, 1f, 0.8f), TextAnchor.UpperLeft);
+            inputHist = Ui.Text(trainingPanel, "", 20, new Color(0.8f, 1f, 0.8f), TextAnchor.UpperLeft).Mono();
             inputHist.rectTransform.Fill(16, 14, 16, 320);
             trainingHelp = Ui.Text(root, "", 22, new Color(1f, 0.95f, 0.7f), TextAnchor.LowerLeft).Outlined();
             trainingHelp.rectTransform.Place(0f, 0f, 1100, 120, 0f, 0f, 16, 40);

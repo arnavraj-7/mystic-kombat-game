@@ -79,6 +79,12 @@ namespace MysticKombat
             return t;
         }
 
+        public static Text Mono(this Text t)
+        {
+            t.font = AssetDb.Mono;
+            return t;
+        }
+
         public static Text Shadowed(this Text t, float px = 4f)
         {
             var s = t.gameObject.AddComponent<Shadow>();

@@ -13,7 +13,19 @@ namespace MysticKombat
         static readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
         static readonly Dictionary<string, Dictionary<string, Vector2>> pivots = new Dictionary<string, Dictionary<string, Vector2>>();
         static readonly Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
-        static Font font;
+        static Font font, mono;
+
+        /// <summary>Monospace font for tables (move list, frame data, stats).</summary>
+        public static Font Mono
+        {
+            get
+            {
+                if (mono != null) return mono;
+                mono = Resources.Load<Font>("Fonts/ShareTechMono-Regular");
+                if (mono == null) mono = Font;
+                return mono;
+            }
+        }
         static Sprite white, circle, softCircle;
 
         public const float StandingPx = 512f;

@@ -59,7 +59,7 @@ namespace MysticKombat
             Row(sb, "Healed", Mathf.RoundToInt(sim.F[0].Stats.Healed), Mathf.RoundToInt(sim.F[1].Stats.Healed));
             Row(sb, "Blocks / Breaks", sim.F[0].Stats.Blocks + " / " + sim.F[0].Stats.ThrowBreaks, sim.F[1].Stats.Blocks + " / " + sim.F[1].Stats.ThrowBreaks);
             Row(sb, "Ki orbs", sim.F[0].Stats.OrbsTaken, sim.F[1].Stats.OrbsTaken);
-            var st = Ui.Text(panel.rectTransform, sb.ToString(), 30, Color.white, TextAnchor.UpperLeft);
+            var st = Ui.Text(panel.rectTransform, sb.ToString(), 28, Color.white, TextAnchor.UpperLeft).Mono();
             st.rectTransform.Fill(30, 20, 30, 24);
 
             if (cfg.Mode == GameMode.Arcade)
@@ -242,7 +242,7 @@ namespace MysticKombat
             name.rectTransform.Place(0.15f, 0.1f, 600, 80);
             var panel = Ui.Box(Root, Ui.Panel);
             panel.rectTransform.Place(0.63f, 0.47f, 1300, 860);
-            body = Ui.Text(panel.rectTransform, "", 25, Color.white, TextAnchor.UpperLeft);
+            body = Ui.Text(panel.rectTransform, "", 23, Color.white, TextAnchor.UpperLeft).Mono();
             body.rectTransform.Fill(30, 20, 30, 20);
             var hint = Ui.Text(Root, "LEFT/RIGHT: fighter    G/Esc: back", 28, new Color(1, 1, 1, 0.7f));
             hint.rectTransform.Place(0.5f, 0.02f, 1000, 40);

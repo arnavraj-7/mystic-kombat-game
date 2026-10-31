@@ -327,7 +327,7 @@ namespace MysticKombat
             pauseMenu.OnMove = i => App.Click();
             var panel = Ui.Box(pauseRoot, Ui.Panel);
             panel.rectTransform.Place(0.75f, 0.5f, 860, 900);
-            moveListText = Ui.Text(panel.rectTransform, MoveListScreen.Describe(Sim.F[0].Def, true), 24, Color.white, TextAnchor.UpperLeft);
+            moveListText = Ui.Text(panel.rectTransform, MoveListScreen.Describe(Sim.F[0].Def, true), 17, Color.white, TextAnchor.UpperLeft).Mono();
             moveListText.rectTransform.Fill(28, 20, 28, 24);
             pauseRoot.gameObject.SetActive(false);
         }

@@ -57,7 +57,7 @@ namespace MysticKombat
             cgo.GetComponent<MeshRenderer>().sharedMaterial = AssetDb.Font.material;
             cgo.GetComponent<MeshRenderer>().sortingOrder = 70;
             callout.fontSize = 64;
-            callout.characterSize = 0.06f;
+            callout.characterSize = 0.045f;
             callout.anchor = TextAnchor.LowerCenter;
             callout.alignment = TextAlignment.Center;
             callout.text = "";
@@ -215,7 +215,7 @@ namespace MysticKombat
             {
                 float a = 1f - Mathf.Clamp01((calloutTime - 0.6f) / 0.3f);
                 callout.color = new Color(1f, 0.85f, 0.35f, a);
-                callout.transform.localPosition = new Vector3(0, f.Def.Height + 0.35f + calloutTime * 0.4f, 0);
+                callout.transform.localPosition = new Vector3(0, f.Def.Height * 0.95f + calloutTime * 0.35f, 0);
                 callout.transform.localScale = Vector3.one * (calloutTime < 0.1f ? Mathf.Lerp(1.5f, 1f, calloutTime / 0.1f) : 1f);
             }
         }

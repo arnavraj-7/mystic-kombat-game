@@ -95,7 +95,7 @@ namespace MysticKombat
                 var floor = NewSprite("floor", -90);
                 floor.sprite = AssetDb.White;
                 floor.color = new Color(0.12f, 0.08f, 0.18f);
-                floor.transform.localScale = new Vector3(40f * 4f, 3f * 4f, 1);
+                floor.transform.localScale = new Vector3(40f, 3f, 1);
                 floor.transform.position = new Vector3(0, -1.5f, 0);
             }
             var midSprite = AssetDb.Load("Arenas/" + id + "/mid", 100);
@@ -580,7 +580,7 @@ namespace MysticKombat
             b.gameObject.SetActive(true);
             b.color = c;
             b.transform.position = new Vector3((x0 + x1) / 2, (y0 + y1) / 2, 0);
-            b.transform.localScale = new Vector3((x1 - x0) * 4f, (y1 - y0) * 4f, 1);
+            b.transform.localScale = new Vector3(x1 - x0, y1 - y0, 1);
         }
 
         void HideBoxes()
