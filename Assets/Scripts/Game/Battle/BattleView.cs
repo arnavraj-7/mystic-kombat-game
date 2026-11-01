@@ -79,7 +79,8 @@ namespace MysticKombat
 
         void BuildArena(string id)
         {
-            var skySprite = AssetDb.Load("Arenas/" + id + "/sky", 100);
+            // battle uses the readability-graded layers (tools/arena_readability.py); menus keep the crisp originals
+            var skySprite = AssetDb.Load("Arenas/" + id + "/sky_fx", 100) ?? AssetDb.Load("Arenas/" + id + "/sky", 100);
             sky = NewSprite("sky", -100);
             if (skySprite != null)
             {
@@ -100,7 +101,7 @@ namespace MysticKombat
                 floor.transform.localScale = new Vector3(40f, 3f, 1);
                 floor.transform.position = new Vector3(0, -1.5f, 0);
             }
-            var midSprite = AssetDb.Load("Arenas/" + id + "/mid", 100);
+            var midSprite = AssetDb.Load("Arenas/" + id + "/mid_fx", 100) ?? AssetDb.Load("Arenas/" + id + "/mid", 100);
             if (midSprite != null)
             {
                 mid = NewSprite("mid", -60);
@@ -184,6 +185,25 @@ namespace MysticKombat
             var r = go.AddComponent<SpriteRenderer>();
             r.sortingOrder = order;
             return r;
+        }
+
+        int frontFighter;
+
+        static bool Hurt(Fighter f) => f.State == FState.Hitstun || f.State == FState.Blockstun || f.State == FState.Tumble ||
+                                        f.State == FState.Knockdown || f.State == FState.Thrown || f.State == FState.KO;
+
+        void UpdateDrawPriority(BattleSim sim)
+        {
+            var a = sim.F[0]; var b = sim.F[1];
+            bool aAct = a.State == FState.Attack || a.State == FState.Dash, bAct = b.State == FState.Attack || b.State == FState.Dash;
+            if (sim.ActiveUltOwner >= 0) frontFighter = sim.ActiveUltOwner;
+            else if (aAct && !bAct) frontFighter = 0;
+            else if (bAct && !aAct) frontFighter = 1;
+            else if (aAct && bAct) frontFighter = a.MoveFrame <= b.MoveFrame ? 0 : 1;   // the newer attack wins the frame
+            else if (Hurt(a) && !Hurt(b)) frontFighter = 1;
+            else if (Hurt(b) && !Hurt(a)) frontFighter = 0;
+            fighters[0].SetFront(frontFighter == 0);
+            fighters[1].SetFront(frontFighter == 1);
         }
 
         // ------------------------------------------------------------------ events -> effects
@@ -359,6 +379,7 @@ namespace MysticKombat
 
         public void Render(float dt)
         {
+            UpdateDrawPriority(sim);
             for (int i = 0; i < 2; i++) fighters[i].Render(sim, fighters, dt, i == sim.ActiveUltOwner);
             RenderMoveFx();
             RenderProjectiles();

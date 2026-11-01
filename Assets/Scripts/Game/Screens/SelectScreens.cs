@@ -29,7 +29,9 @@ namespace MysticKombat
             public RectTransform Root;
             public Image Pose, Glow;
             public Text Name, Title, Info, Level;
-            public Image[] Bars = new Image[4];
+            public Image[][] Pips = new Image[4][];
+            public Text[] Values = new Text[4];
+            public float[] Target = new float[4], Shown4 = new float[4];
             public int Shown = -2;
             public float Pop;
         }
@@ -129,6 +131,31 @@ namespace MysticKombat
             return ringSprite;
         }
 
+        const int StatPips = 10;
+        static readonly Color PipOff = new Color(0f, 0f, 0f, 0.55f);
+        static readonly Color PipTop = new Color(1f, 0.55f, 0.15f);
+        float[] statMin, statMax;
+
+        static float[] StatValues(FighterDef f) => new[] { (float)f.MaxHp, f.Power, f.WalkSpeed, f.KiGain };
+
+        /// <summary>Map a stat onto 3..10 pips relative to the playable (non-boss) roster, so the weakest
+        /// fighter still reads as a real value and the differences between fighters are easy to see.</summary>
+        float Rating(int stat, float value)
+        {
+            if (statMin == null)
+            {
+                statMin = new float[4]; statMax = new float[4];
+                for (int i = 0; i < 4; i++) { statMin[i] = float.MaxValue; statMax[i] = float.MinValue; }
+                foreach (var f in App.Grimoire.Fighters.Where(x => !x.Boss))
+                {
+                    var v = StatValues(f);
+                    for (int i = 0; i < 4; i++) { statMin[i] = Mathf.Min(statMin[i], v[i]); statMax[i] = Mathf.Max(statMax[i], v[i]); }
+                }
+            }
+            float t = statMax[stat] - statMin[stat] < 1e-4f ? 0.5f : (value - statMin[stat]) / (statMax[stat] - statMin[stat]);
+            return Mathf.Clamp(3f + 7f * t, 1f, StatPips);
+        }
+
         SidePanel BuildSide(int p)
         {
             var s = new SidePanel();
@@ -152,10 +179,16 @@ namespace MysticKombat
             {
                 var lab = Ui.Text(s.Root, labels[i], 21, new Color(0.85f, 0.85f, 1f), TextAnchor.MiddleLeft);
                 lab.rectTransform.Place(0f, 0f, 110, 26, 0f, 0.5f, 14, 300 - i * 28);
-                var bg = Ui.Box(s.Root, new Color(0, 0, 0, 0.6f));
-                bg.rectTransform.Place(0f, 0f, 316, 14, 0f, 0.5f, 130, 300 - i * 28);
-                s.Bars[i] = Ui.Fill(bg.rectTransform, Ui.Gold, Image.FillMethod.Horizontal, 0);
-                s.Bars[i].rectTransform.Fill();
+                // segmented rating (10 pips), ranked against the playable roster, plus the real value
+                s.Pips[i] = new Image[StatPips];
+                for (int k = 0; k < StatPips; k++)
+                {
+                    var pip = Ui.Box(s.Root, PipOff, "pip");
+                    pip.rectTransform.Place(0f, 0f, 22, 14, 0f, 0.5f, 130 + k * 25, 300 - i * 28);
+                    s.Pips[i][k] = pip;
+                }
+                s.Values[i] = Ui.Text(s.Root, "", 20, new Color(1f, 1f, 1f, 0.9f), TextAnchor.MiddleRight).Outlined(1);
+                s.Values[i].rectTransform.Place(0f, 0f, 70, 26, 0f, 0.5f, 380, 300 - i * 28);
             }
             var infoBg = Ui.Box(s.Root, new Color(0.03f, 0.02f, 0.08f, 0.7f));
             infoBg.rectTransform.Place(0.5f, 0f, 460, 168, 0.5f, 0f, 0, 0);
@@ -180,7 +213,7 @@ namespace MysticKombat
                     s.Name.text = "RANDOM";
                     s.Title.text = "Let the multiverse decide";
                     s.Info.text = "";
-                    foreach (var b in s.Bars) b.fillAmount = 0;
+                    for (int i = 0; i < 4; i++) { s.Target[i] = 0; s.Values[i].text = "?"; }
                     s.Glow.color = new Color(1, 0.8f, 0.3f, 0.3f);
                 }
                 else
@@ -192,10 +225,12 @@ namespace MysticKombat
                     s.Title.text = f.Title + "   |   " + f.Archetype;
                     var col = AssetDb.Hex(f.Color, Color.white);
                     s.Glow.color = new Color(col.r, col.g, col.b, 0.45f);
-                    s.Bars[0].fillAmount = Mathf.InverseLerp(800, 1550, f.MaxHp);
-                    s.Bars[1].fillAmount = Mathf.InverseLerp(0.9f, 1.2f, f.Power);
-                    s.Bars[2].fillAmount = Mathf.InverseLerp(2.8f, 4.0f, f.WalkSpeed);
-                    s.Bars[3].fillAmount = Mathf.InverseLerp(0.8f, 1.25f, f.KiGain);
+                    float[] v = StatValues(f);
+                    for (int i = 0; i < 4; i++) s.Target[i] = Rating(i, v[i]);
+                    s.Values[0].text = f.MaxHp.ToString("0");
+                    s.Values[1].text = "x" + f.Power.ToString("0.00");
+                    s.Values[2].text = f.WalkSpeed.ToString("0.0");
+                    s.Values[3].text = "x" + f.KiGain.ToString("0.00");
                     var lines = new List<string>();
                     for (int i = 0; i < 3; i++)
                     {
@@ -211,6 +246,16 @@ namespace MysticKombat
                 }
             }
             s.Pop = Mathf.MoveTowards(s.Pop, 0, Time.unscaledDeltaTime * 4f);
+            for (int i = 0; i < 4; i++)
+            {
+                s.Shown4[i] = Mathf.MoveTowards(s.Shown4[i], s.Target[i], Time.unscaledDeltaTime * 40f);
+                for (int k = 0; k < StatPips; k++)
+                {
+                    float lit = Mathf.Clamp01(s.Shown4[i] - k);
+                    var on = k >= StatPips - 2 ? PipTop : Ui.Gold;
+                    s.Pips[i][k].color = Color.Lerp(PipOff, on, lit);
+                }
+            }
             float bob = Mathf.Sin(Time.unscaledTime * 2f + p) * 6f;
             s.Pose.rectTransform.anchoredPosition = new Vector2(0, 480 + bob);
             float sc = 1f + s.Pop * 0.08f;

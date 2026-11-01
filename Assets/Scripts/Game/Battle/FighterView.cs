@@ -75,6 +75,15 @@ namespace MysticKombat
             return r;
         }
 
+        /// <summary>Draw priority: the fighter who is acting is drawn in front, the one getting hit behind.</summary>
+        public void SetFront(bool front)
+        {
+            int b = front ? 12 : 4;
+            aura.sortingOrder = b;
+            body.sortingOrder = b + 1;
+            flash.sortingOrder = b + 2;
+        }
+
         public void Callout(string text)
         {
             callout.text = text.ToUpper();

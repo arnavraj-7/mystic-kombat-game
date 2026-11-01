@@ -1016,7 +1016,7 @@ namespace MysticKombat.Core
             var a = F[0];
             var b = F[1];
             if (a.State == FState.KO || b.State == FState.KO || a.State == FState.Thrown || b.State == FState.Thrown) return;
-            float minDist = (a.Def.Width + b.Def.Width) * 0.5f;
+            float minDist = (a.Def.Width + b.Def.Width) * 0.5f * R.PushScale;
             float dx = b.X - a.X;
             bool vertical = a.Y < b.Y + b.HurtHeight * 0.8f && b.Y < a.Y + a.HurtHeight * 0.8f;
             if (vertical && Math.Abs(dx) < minDist)

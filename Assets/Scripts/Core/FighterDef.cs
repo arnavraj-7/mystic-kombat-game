@@ -269,6 +269,7 @@ namespace MysticKombat.Core
         public int BufferFrames = 8, ThrowBreakWindow = 14;
         public int[] OrbTimes = { 70, 35 };    // round-clock seconds at which a Ki orb spawns
         public float OrbKi = 30f;
+        public float PushScale = 1.4f;        // pushbox width relative to the hurtbox width (bodies never sink into each other)
 
         public static Rules FromJson(Dictionary<string, object> d)
         {
@@ -289,6 +290,7 @@ namespace MysticKombat.Core
                 BufferFrames = J.I(d, "bufferFrames", 8),
                 ThrowBreakWindow = J.I(d, "throwBreakWindow", 14),
                 OrbKi = J.F(d, "orbKi", 30f),
+                PushScale = J.F(d, "pushScale", 1.4f),
             };
             var ot = J.Floats(d, "orbTimes");
             if (ot != null) { r.OrbTimes = new int[ot.Length]; for (int i = 0; i < ot.Length; i++) r.OrbTimes[i] = (int)ot[i]; }
