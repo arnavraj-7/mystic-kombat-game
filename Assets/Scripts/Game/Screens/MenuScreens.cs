@@ -263,6 +263,7 @@ namespace MysticKombat
     {
         MenuList menu;
         static readonly int[] RoundTimes = { 45, 60, 99, 0 };
+        static readonly string[] VoiceNames = { "JAPANESE", "ENGLISH", "OFF" };
 
         public override void Enter()
         {
@@ -282,6 +283,8 @@ namespace MysticKombat
                     s.RoundSeconds = RoundTimes[(i + d + RoundTimes.Length) % RoundTimes.Length];
                 })
                 .Add(() => "ULTIMATE CUTSCENES   < " + (s.Cutscenes ? "ON" : "OFF") + " >", () => s.Cutscenes = !s.Cutscenes, d => s.Cutscenes = !s.Cutscenes)
+                .Add(() => "FIGHTER VOICES   < " + VoiceNames[Mathf.Clamp(s.VoiceLang, 0, 2)] + " >", () => { s.VoiceLang = (s.VoiceLang + 1) % 3; App.Audio.FighterVoice(0, "ren", "s3"); },
+                     d => { s.VoiceLang = (s.VoiceLang + 3 + d) % 3; App.Audio.FighterVoice(0, "ren", "s3"); })
                 .Add(() => "BUTTON HINTS   < " + (s.ShowHints ? "ON" : "OFF") + " >", () => s.ShowHints = !s.ShowHints, d => s.ShowHints = !s.ShowHints)
                 .Add(() => "FULLSCREEN   < " + (s.Fullscreen ? "ON" : "OFF") + " >", () => { s.Fullscreen = !s.Fullscreen; UnityEngine.Screen.fullScreen = s.Fullscreen; }, d => { s.Fullscreen = !s.Fullscreen; UnityEngine.Screen.fullScreen = s.Fullscreen; })
                 .Add("BACK", Back);

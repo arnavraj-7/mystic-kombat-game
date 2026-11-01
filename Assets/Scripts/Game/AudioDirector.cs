@@ -1,5 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace MysticKombat
 {
@@ -7,6 +10,9 @@ namespace MysticKombat
     public sealed class AudioDirector : MonoBehaviour
     {
         AudioSource musicA, musicB, voice;
+        readonly AudioSource[] fighterVoice = new AudioSource[2];
+        readonly float[] fighterVoiceAt = new float[2];
+        static readonly Dictionary<string, AudioClip> overrides = new Dictionary<string, AudioClip>();
         readonly List<AudioSource> sfx = new List<AudioSource>();
         int nextSfx;
         string currentTrack;
@@ -24,6 +30,13 @@ namespace MysticKombat
             foreach (var m in new[] { musicA, musicB }) { m.loop = true; m.playOnAwake = false; m.volume = 0; }
             voice = gameObject.AddComponent<AudioSource>();
             voice.playOnAwake = false;
+            for (int i = 0; i < 2; i++)
+            {
+                fighterVoice[i] = gameObject.AddComponent<AudioSource>();
+                fighterVoice[i].playOnAwake = false;
+                fighterVoice[i].panStereo = i == 0 ? -0.3f : 0.3f;   // P1 voice from the left, P2 from the right
+            }
+            StartCoroutine(LoadOverrides());
             for (int i = 0; i < 14; i++)
             {
                 var s = gameObject.AddComponent<AudioSource>();
@@ -78,9 +91,60 @@ namespace MysticKombat
             s.PlayOneShot(clip, volume * SfxVolume);
         }
 
+        /// <summary>Clips the player dropped into StreamingAssets/voice_override (file name = line key,
+        /// e.g. ren_ult.ogg, kazu_s1.wav, fight.mp3). They replace the built-in line on this machine only.</summary>
+        IEnumerator LoadOverrides()
+        {
+            string dir = Path.Combine(Application.streamingAssetsPath, "voice_override");
+            if (!Directory.Exists(dir)) yield break;
+            foreach (var file in Directory.GetFiles(dir))
+            {
+                string ext = Path.GetExtension(file).ToLowerInvariant();
+                var type = ext == ".ogg" ? AudioType.OGGVORBIS : ext == ".wav" ? AudioType.WAV : ext == ".mp3" ? AudioType.MPEG : AudioType.UNKNOWN;
+                if (type == AudioType.UNKNOWN) continue;
+                using (var req = UnityWebRequestMultimedia.GetAudioClip("file:///" + file.Replace('\\', '/'), type))
+                {
+                    yield return req.SendWebRequest();
+                    if (req.result != UnityWebRequest.Result.Success) { Debug.LogWarning("voice override failed: " + file); continue; }
+                    var clip = DownloadHandlerAudioClip.GetContent(req);
+                    overrides[Path.GetFileNameWithoutExtension(file).ToLowerInvariant()] = clip;
+                    Debug.Log("voice override: " + Path.GetFileName(file));
+                }
+            }
+        }
+
+        static AudioClip VoiceClip(string key)
+        {
+            int slash = key.LastIndexOf('/');
+            string bare = (slash >= 0 ? key.Substring(slash + 1) : key).ToLowerInvariant();
+            if (overrides.TryGetValue(bare, out var o)) return o;
+            return AssetDb.Clip("Voice/" + key);
+        }
+
+        /// <summary>A fighter's own voice line: line = s1/s2/s3/ult/hurt/ko/win. Each fighter has a channel,
+        /// so both can shout at once; a new important line cuts the old one, hurt grunts never cut a callout.</summary>
+        public void FighterVoice(int who, string fighterId, string line, float delay = 0f)
+        {
+            int lang = GameApp.I != null && GameApp.I.Save != null ? GameApp.I.Save.VoiceLang : 0;
+            if (lang == 2) return;
+            AudioClip clip = null;
+            if (lang == 0) clip = VoiceClip("jp/" + fighterId + "_" + line);
+            if (clip == null && line == "ult") clip = VoiceClip("ult_" + fighterId);
+            if (clip == null) return;
+            who = Mathf.Clamp(who, 0, 1);
+            var src = fighterVoice[who];
+            if (line == "hurt" && src.isPlaying) return;
+            if (line == "hurt" && Time.unscaledTime - fighterVoiceAt[who] < 0.7f) return;
+            fighterVoiceAt[who] = Time.unscaledTime;
+            src.Stop();
+            src.clip = clip;
+            src.volume = VoiceVolume * (line == "hurt" ? 0.8f : 1f);
+            if (delay > 0) src.PlayDelayed(delay); else src.Play();
+        }
+
         public void Voice(string name, float volume = 1f)
         {
-            var clip = AssetDb.Clip("Voice/" + name);
+            var clip = VoiceClip(name);
             if (clip == null) return;
             voice.Stop();
             voice.clip = clip;

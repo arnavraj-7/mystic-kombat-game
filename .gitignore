@@ -31,3 +31,7 @@ art/raw/
 art/canvas/
 art/qa/
 *.pyc
+
+# local-only voice overrides (never pushed)
+Assets/StreamingAssets/voice_override/*
+!Assets/StreamingAssets/voice_override/README.txt

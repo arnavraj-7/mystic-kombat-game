@@ -224,6 +224,8 @@ namespace MysticKombat
                         Spawn(AssetDb.Circle, new Vector2(e.X, e.Y), 0.15f, big ? 1.5f : 0.9f, 0.15f, new Color(1, 1, 1, 0.45f), true);
                         shake = Mathf.Max(shake, big ? 0.22f : 0.08f);
                         audio.Sfx(big ? "hit_heavy" : "hit_light", big ? 1f : 0.8f, big ? 0.95f : 1.05f);
+                        int vi = 1 - Mathf.Clamp(e.Who, 0, 1);
+                        if (big || Random.value < 0.3f) audio.FighterVoice(vi, sim.F[vi].Def.Id, "hurt");
                         break;
                     }
                     case Ev.Block:
@@ -250,7 +252,11 @@ namespace MysticKombat
                         var f = sim.F[e.Who];
                         var m = f.Def.Move(e.Str);
                         if (m != null && m.Slot.StartsWith("special") && m.Name != null) fighters[e.Who].Callout(m.Name);
-                        if (m != null && m.Slot.StartsWith("special")) audio.Sfx("ki_charge", 0.35f, 1.3f);
+                        if (m != null && m.Slot.StartsWith("special"))
+                        {
+                            audio.Sfx("ki_charge", 0.35f, 1.3f);
+                            audio.FighterVoice(e.Who, f.Def.Id, "s" + m.Slot.Substring(m.Slot.Length - 1));
+                        }
                         break;
                     }
                     case Ev.ProjectileSpawn:
@@ -282,7 +288,7 @@ namespace MysticKombat
                         Spawn(AssetDb.Vfx("aura"), new Vector2(f.X, f.Y + 1.2f), 2.5f, 4f, 0.7f, AssetDb.Hex(f.Def.Color, Color.white), true);
                         Spawn(AssetDb.Vfx("rift"), new Vector2(f.X, f.Y + 1.2f), 0.5f, 5f, 0.6f, new Color(1f, 0.8f, 0.4f), true, 0, 90);
                         audio.Sfx("ult_flash");
-                        audio.Voice("ult_" + f.Def.Id);
+                        audio.FighterVoice(e.Who, f.Def.Id, "ult");
                         break;
                     }
                     case Ev.UltConnect:
@@ -345,6 +351,10 @@ namespace MysticKombat
                         flashScreen = 1f;
                         shake = 0.4f;
                         audio.Sfx("ko");
+                        if (e.Who == 0 || e.Who == 1) audio.FighterVoice(1 - e.Who, sim.F[1 - e.Who].Def.Id, "ko");
+                        break;
+                    case Ev.RoundOver:
+                        if (e.Who == 0 || e.Who == 1) audio.FighterVoice(e.Who, sim.F[e.Who].Def.Id, "win", 1.4f);
                         break;
                 }
             }

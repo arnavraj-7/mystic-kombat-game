@@ -20,6 +20,7 @@ namespace MysticKombat
     {
         public float MusicVolume = 0.6f, SfxVolume = 0.9f, VoiceVolume = 1f;
         public bool Cutscenes = true, ShowHints = true, Fullscreen = true;
+        public int VoiceLang = 0;          // fighter voices: 0 Japanese, 1 English (ultimates only), 2 off
         public int CpuLevel = 1, RoundSeconds = 99;
         public bool BossUnlocked;
         public string LastIp = "192.168.1.";
@@ -38,6 +39,7 @@ namespace MysticKombat
                 s.SfxVolume = J.F(d, "sfx", s.SfxVolume);
                 s.VoiceVolume = J.F(d, "voice", s.VoiceVolume);
                 s.Cutscenes = J.B(d, "cutscenes", true);
+                s.VoiceLang = J.I(d, "voiceLang", 0);
                 s.ShowHints = J.B(d, "hints", true);
                 s.Fullscreen = J.B(d, "fullscreen", true);
                 s.CpuLevel = J.I(d, "cpuLevel", 1);
@@ -65,7 +67,7 @@ namespace MysticKombat
                     scores.Add(new Dictionary<string, object> { { "fighter", h.Fighter }, { "score", h.Score }, { "stage", h.Stage }, { "date", h.Date }, { "difficulty", h.Difficulty } });
                 var d = new Dictionary<string, object>
                 {
-                    { "music", MusicVolume }, { "sfx", SfxVolume }, { "voice", VoiceVolume }, { "cutscenes", Cutscenes },
+                    { "music", MusicVolume }, { "sfx", SfxVolume }, { "voice", VoiceVolume }, { "cutscenes", Cutscenes }, { "voiceLang", VoiceLang },
                     { "hints", ShowHints }, { "fullscreen", Fullscreen }, { "cpuLevel", CpuLevel }, { "roundSeconds", RoundSeconds },
                     { "bossUnlocked", BossUnlocked }, { "lastIp", LastIp }, { "scores", scores },
                 };
