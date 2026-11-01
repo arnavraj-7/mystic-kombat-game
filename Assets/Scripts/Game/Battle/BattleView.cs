@@ -42,6 +42,7 @@ namespace MysticKombat
             public SpriteRenderer R;
             public Vector2 V;
             public float Spin, Phase;
+            public bool Front;
         }
 
         public BattleView(BattleSim sim, string arenaId, Camera cam)
@@ -117,8 +118,8 @@ namespace MysticKombat
             int count = kind == "void" || kind == "sparks" ? 50 : 36;
             for (int i = 0; i < count; i++)
             {
-                var r = NewSprite("amb", i % 3 == 0 ? 40 : -45);
-                var a = new Ambient { R = r, Phase = Random.value * 10f };
+                var r = NewSprite("amb", i % 6 == 0 ? 40 : -45);
+                var a = new Ambient { R = r, Phase = Random.value * 10f, Front = i % 6 == 0 };
                 ResetAmbient(a, kind, true);
                 ambient.Add(a);
             }
@@ -135,7 +136,7 @@ namespace MysticKombat
                 case "petals":
                     r.sprite = AssetDb.HasVfx("petals") ? AssetDb.Vfx("petals") : AssetDb.Circle;
                     r.color = kind == "petals" ? new Color(1f, 0.75f, 0.85f, 0.9f) : new Color(0.55f, 0.8f, 0.3f, 0.85f);
-                    r.transform.localScale = Vector3.one * Random.Range(0.12f, 0.24f) * (AssetDb.HasVfx("petals") ? 1f : 0.6f);
+                    r.transform.localScale = Vector3.one * Random.Range(0.09f, 0.17f) * (AssetDb.HasVfx("petals") ? 1f : 0.6f);
                     a.V = new Vector2(Random.Range(-1.2f, -0.3f), Random.Range(-0.9f, -0.4f));
                     a.Spin = Random.Range(-180f, 180f);
                     break;
@@ -167,6 +168,12 @@ namespace MysticKombat
                     a.V = new Vector2(Random.Range(-0.5f, -0.1f), Random.Range(-0.1f, 0.15f));
                     break;
             }
+            if (a.Front)
+            {
+                // foreground motes stay small and translucent so they never hide the fighters
+                var c = r.color; c.a *= 0.45f; r.color = c;
+                r.transform.localScale *= 0.7f;
+            }
             r.transform.position = new Vector3(x, y, 0);
         }
 
@@ -193,8 +200,8 @@ namespace MysticKombat
                         victim.Flash = 1f;
                         bool big = e.Heavy;
                         Spawn(AssetDb.HasVfx(big ? "hit_spark_heavy" : "hit_spark") ? AssetDb.Vfx(big ? "hit_spark_heavy" : "hit_spark") : AssetDb.SoftCircle,
-                              new Vector2(e.X, e.Y), big ? 1.6f : 0.95f, big ? 2.4f : 1.4f, 0.22f, big ? new Color(1f, 0.85f, 0.5f) : Color.white, true, Random.Range(0, 360f));
-                        Spawn(AssetDb.Circle, new Vector2(e.X, e.Y), 0.2f, big ? 2.2f : 1.2f, 0.18f, new Color(1, 1, 1, 0.6f), true);
+                              new Vector2(e.X, e.Y), big ? 1.0f : 0.6f, big ? 1.6f : 0.95f, 0.16f, big ? new Color(1f, 0.85f, 0.5f) : Color.white, true, Random.Range(0, 360f));
+                        Spawn(AssetDb.Circle, new Vector2(e.X, e.Y), 0.15f, big ? 1.5f : 0.9f, 0.15f, new Color(1, 1, 1, 0.45f), true);
                         shake = Mathf.Max(shake, big ? 0.22f : 0.08f);
                         audio.Sfx(big ? "hit_heavy" : "hit_light", big ? 1f : 0.8f, big ? 0.95f : 1.05f);
                         break;

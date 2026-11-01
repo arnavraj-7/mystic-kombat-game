@@ -194,6 +194,7 @@ namespace MysticKombat
                 }
             }
             var scores = new StringBuilder("<color=#FFD45A>HIGH SCORES</color>\n");
+            if (App.Save.Scores.Count == 0) scores.AppendLine("<color=#AAAACC>No scores yet - clear the ladder to set one</color>");
             for (int i = 0; i < Mathf.Min(5, App.Save.Scores.Count); i++)
             {
                 var h = App.Save.Scores[i];
@@ -266,7 +267,7 @@ namespace MysticKombat
             if (!compact) sb.AppendLine("<color=#BBBBFF>" + f.Description + "</color>");
             sb.AppendLine($"HP {f.MaxHp}   Power x{f.Power:0.00}   Speed {f.WalkSpeed:0.0}   Ki gain x{f.KiGain:0.00}");
             sb.AppendLine();
-            sb.AppendLine("<color=#FFD45A>MOVE                        INPUT              STARTUP ACT REC  DMG   ON-BLOCK</color>");
+            sb.AppendLine($"<color=#FFD45A>{"MOVE",-26} {"INPUT",-14} {"STRT",4} {"ACT",3} {"REC",3} {"DMG",4} {"BLOCK",5}  USES</color>");
             void Line(string slot, string input)
             {
                 var m = f.Move(slot);
@@ -274,10 +275,10 @@ namespace MysticKombat
                 int onBlock = m.Blockstun - (m.Active - 1) - m.Recovery;
                 string dmg = m.Projectile != null ? (m.Projectile.Damage * m.Projectile.Count * m.Projectile.Hits).ToString("0") : (m.Damage * m.Hits).ToString("0");
                 string extra = "";
-                if (m.Charges > 0) extra = $"  [{Mathf.Max(1, m.Charges)}x {(m.Recharge > 0 ? (m.Recharge / 60f).ToString("0.#") + "s" : "/round")}]";
-                if (m.HealAmount > 0) extra += $"  heal {m.HealAmount:0}";
+                if (m.Charges > 0) extra = $"  {Mathf.Max(1, m.Charges)}x {(m.Recharge > 0 ? (m.Recharge / 60f).ToString("0.#") + "s" : "/rnd")}";
+                if (m.HealAmount > 0) extra += $" <color=#7CFF8A>+{m.HealAmount:0}hp</color>";
                 if (m.Kind == "none") dmg = "-";
-                sb.AppendLine($"{m.Name,-27} {input,-18} {m.Startup,5} {m.Active,4} {m.Recovery,4} {dmg,5} {(m.Kind == "none" ? "-" : (onBlock >= 0 ? "+" : "") + onBlock),8}{extra}");
+                sb.AppendLine($"{m.Name,-26} {input,-14} {m.Startup,4} {m.Active,3} {m.Recovery,3} {dmg,4} {(m.Kind == "none" ? "-" : (onBlock >= 0 ? "+" : "") + onBlock),5}{extra}");
             }
             Line("light", "Light");
             Line("heavy", "Heavy");

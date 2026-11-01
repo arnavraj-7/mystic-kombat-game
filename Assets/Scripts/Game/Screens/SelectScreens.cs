@@ -133,31 +133,34 @@ namespace MysticKombat
         {
             var s = new SidePanel();
             float ax = p == 0 ? 0f : 1f;
-            s.Root = Ui.Rect(Root, "side" + p).Place(ax, 0.42f, 620, 760, ax, 0f, p == 0 ? 20 : -20, 0);
+            // one column per side, kept clear of the centred fighter grid (grid spans x 480..1440)
+            s.Root = Ui.Rect(Root, "side" + p).Place(ax, 0f, 460, 1010, ax, 0f, p == 0 ? 20 : -20, 30);
             s.Glow = Ui.Image(s.Root, AssetDb.SoftCircle, new Color(1, 1, 1, 0.35f), "glow");
-            s.Glow.rectTransform.Place(0.5f, 0.55f, 640, 640);
+            s.Glow.rectTransform.Place(0.5f, 0f, 560, 560, 0.5f, 0f, 0, 440);
             s.Pose = Ui.Image(s.Root, null, Color.white, "pose");
             s.Pose.preserveAspect = true;
-            s.Pose.rectTransform.Place(0.5f, 0.22f, 520, 470, 0.5f, 0f);
+            s.Pose.rectTransform.Place(0.5f, 0f, 460, 520, 0.5f, 0f, 0, 480);
             if (p == 1) s.Pose.rectTransform.localScale = new Vector3(-1, 1, 1);
-            s.Name = Ui.Text(s.Root, "", 58, Color.white).Outlined(3).Shadowed(5);
-            s.Name.rectTransform.Place(0.5f, 0.2f, 620, 70);
-            s.Title = Ui.Text(s.Root, "", 30, Ui.Gold).Outlined(2);
-            s.Title.rectTransform.Place(0.5f, 0.13f, 620, 40);
+            s.Level = Ui.Text(s.Root, "", 38, Ui.Cyan).Outlined(3);
+            s.Level.rectTransform.Place(0.5f, 0f, 460, 48, 0.5f, 0f, 0, 432);
+            s.Name = Ui.Text(s.Root, "", 54, Color.white).Outlined(3).Shadowed(5);
+            s.Name.rectTransform.Place(0.5f, 0f, 460, 64, 0.5f, 0f, 0, 362);
+            s.Title = Ui.Text(s.Root, "", 25, Ui.Gold).Outlined(2);
+            s.Title.rectTransform.Place(0.5f, 0f, 460, 34, 0.5f, 0f, 0, 328);
             string[] labels = { "HEALTH", "POWER", "SPEED", "KI GAIN" };
             for (int i = 0; i < 4; i++)
             {
-                var lab = Ui.Text(s.Root, labels[i], 22, new Color(0.85f, 0.85f, 1f), TextAnchor.MiddleLeft);
-                lab.rectTransform.Place(0f, 0.08f, 140, 26, 0f, 0.5f, 40, -i * 30);
+                var lab = Ui.Text(s.Root, labels[i], 21, new Color(0.85f, 0.85f, 1f), TextAnchor.MiddleLeft);
+                lab.rectTransform.Place(0f, 0f, 110, 26, 0f, 0.5f, 14, 300 - i * 28);
                 var bg = Ui.Box(s.Root, new Color(0, 0, 0, 0.6f));
-                bg.rectTransform.Place(0f, 0.08f, 380, 16, 0f, 0.5f, 190, -i * 30);
+                bg.rectTransform.Place(0f, 0f, 316, 14, 0f, 0.5f, 130, 300 - i * 28);
                 s.Bars[i] = Ui.Fill(bg.rectTransform, Ui.Gold, Image.FillMethod.Horizontal, 0);
                 s.Bars[i].rectTransform.Fill();
             }
-            s.Info = Ui.Text(s.Root, "", 22, Color.white, TextAnchor.UpperLeft).Outlined(1);
-            s.Info.rectTransform.Place(0.5f, 1f, 600, 160, 0.5f, 1f, 0, 0);
-            s.Level = Ui.Text(s.Root, "", 40, Ui.Cyan).Outlined(3);
-            s.Level.rectTransform.Place(0.5f, 0.32f, 600, 60);
+            var infoBg = Ui.Box(s.Root, new Color(0.03f, 0.02f, 0.08f, 0.7f));
+            infoBg.rectTransform.Place(0.5f, 0f, 460, 168, 0.5f, 0f, 0, 0);
+            s.Info = Ui.Text(s.Root, "", 20, Color.white, TextAnchor.MiddleLeft).Outlined(1);
+            s.Info.rectTransform.Place(0.5f, 0f, 436, 160, 0.5f, 0f, 0, 4);
             return s;
         }
 
@@ -209,7 +212,7 @@ namespace MysticKombat
             }
             s.Pop = Mathf.MoveTowards(s.Pop, 0, Time.unscaledDeltaTime * 4f);
             float bob = Mathf.Sin(Time.unscaledTime * 2f + p) * 6f;
-            s.Pose.rectTransform.anchoredPosition = new Vector2(0, bob);
+            s.Pose.rectTransform.anchoredPosition = new Vector2(0, 480 + bob);
             float sc = 1f + s.Pop * 0.08f;
             s.Pose.rectTransform.localScale = new Vector3(p == 1 ? -sc : sc, sc, 1);
             bool cpu = !cfg.IsHuman(p);
@@ -282,7 +285,8 @@ namespace MysticKombat
             {
                 if (cursor[p] < 0) continue;
                 var t = tiles[Mathf.Clamp(cursor[p], 0, tiles.Count - 1)];
-                frame[p].rectTransform.position = t.position;
+                // tiles pivot at their top edge; centre the ring on the tile's visual centre
+                frame[p].rectTransform.position = t.TransformPoint(t.rect.center);
                 float pulse = locked[p] ? 1f : 0.6f + 0.4f * Mathf.Abs(Mathf.Sin(Time.unscaledTime * 5f));
                 var c = frame[p].color; c.a = pulse; frame[p].color = c;
                 frame[p].rectTransform.localScale = Vector3.one * (p == 1 && cursor[0] == cursor[1] ? 1.08f : 1f);

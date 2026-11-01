@@ -19,6 +19,8 @@ namespace MysticKombat
         float ghostTimer;
         int ghostNext;
         float tumbleSpin;
+        string lastPose;
+        float posePop;
         public Color Tint = Color.white;   // alternate colour for mirror matches
 
         public FighterView(Transform parent, Fighter f, int index)
@@ -111,6 +113,14 @@ namespace MysticKombat
             var sprite = AssetDb.Pose(f.Def, pose);
             body.sprite = sprite;
             flash.sprite = sprite;
+            // a tiny squash on every pose change hides the hard cut between two drawings
+            if (pose != lastPose)
+            {
+                bool cycle = lastPose != null && lastPose.Length > 2 && pose.Length > 2 && lastPose.Substring(0, lastPose.Length - 1) == pose.Substring(0, pose.Length - 1);
+                posePop = cycle ? 0.35f : 1f;
+                lastPose = pose;
+            }
+            posePop = Mathf.MoveTowards(posePop, 0, dt * 12f);
 
             Vector3 pos = new Vector3(f.X, f.Y, 0);
             float sx = 1f, sy = 1f, rot = 0f;
@@ -124,7 +134,11 @@ namespace MysticKombat
                 else if (mf < m.Startup + m.Active) { sx = 1.06f; rot = -3f; pos.x += f.Facing * 0.08f; }
                 if (m.Slot == "crouch_light") { sy = 1f; pos.x += f.Facing * (mf >= m.Startup && mf < m.Startup + m.Active ? 0.25f : 0f); }
             }
-            if (f.State == FState.Hitstun || f.State == FState.Thrown) rot = 6f;
+            // recoil: snap back on impact, ease upright as hitstun runs out
+            if (f.State == FState.Hitstun || f.State == FState.Thrown) { rot = 4f + Mathf.Min(f.Stun, 18) * 0.55f; pos.x -= f.Facing * Mathf.Min(f.Stun, 18) * 0.004f; }
+            if (f.State == FState.Blockstun) rot = 3f + Mathf.Min(f.Stun, 12) * 0.3f;
+            if (f.State == FState.Walk) rot = (f.VX * f.Facing > 0 ? -3f : 2.5f);
+            if (f.State == FState.Air) rot = Mathf.Clamp(-f.VY * 1.2f, -7f, 7f);
             if (f.State == FState.Dash) { rot = -8f; pos.y += 0.05f; }
             if (f.State == FState.BackDash) { rot = 8f; pos.y += Mathf.Sin(Mathf.Clamp01(f.StateFrame / 14f) * Mathf.PI) * 0.35f; }
             if (f.State == FState.Tumble)
@@ -138,8 +152,8 @@ namespace MysticKombat
 
             // landing squash
             Squash = Mathf.MoveTowards(Squash, 0, dt * 5f);
-            sx *= 1f + Squash * 0.12f;
-            sy *= 1f - Squash * 0.12f;
+            sx *= 1f + Squash * 0.12f + posePop * 0.045f;
+            sy *= 1f - Squash * 0.12f - posePop * 0.03f;
 
             // hitstop shake on the victim
             if (f.Hitstop > 0 && (f.State == FState.Hitstun || f.State == FState.Tumble || f.State == FState.Blockstun))
@@ -159,7 +173,7 @@ namespace MysticKombat
             // hit flash, rage pulse, ultimate glow
             Flash = Mathf.MoveTowards(Flash, 0, dt * 7f);
             float rage = f.Raging(sim.R) && f.Hp > 0 ? 0.25f + 0.2f * Mathf.Sin(Time.time * 10f) : 0f;
-            if (Flash > 0.01f) flash.color = new Color(1, 1, 1, Flash * 0.85f);
+            if (Flash > 0.01f) flash.color = new Color(1, 1, 1, Flash * 0.55f);
             else if (ulting) flash.color = new Color(color.r, color.g, color.b, 0.3f + 0.2f * Mathf.Sin(Time.time * 30f));
             else if (rage > 0) flash.color = new Color(1f, 0.1f, 0.05f, rage);
             else flash.color = new Color(1, 1, 1, 0);

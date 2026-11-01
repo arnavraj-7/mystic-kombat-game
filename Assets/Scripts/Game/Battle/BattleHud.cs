@@ -89,15 +89,15 @@ namespace MysticKombat
                     hints.text = "WASD/Arrows move   F/J light   G/K heavy   H/L  R/U  T/I specials   Y/O ULT   V/; throw   hold back = block   Esc pause";
             }
 
-            trainingPanel = Ui.Rect(root, "training").Place(1f, 0.5f, 520, 560, 1f, 0.5f, -16, 0);
-            var tp = Ui.Box(trainingPanel, new Color(0, 0, 0, 0.62f));
+            trainingPanel = Ui.Rect(root, "training").Place(1f, 1f, 460, 470, 1f, 1f, -16, -175);
+            var tp = Ui.Box(trainingPanel, new Color(0, 0, 0, 0.45f));
             tp.rectTransform.Fill();
-            frameData = Ui.Text(trainingPanel, "", 20, Color.white, TextAnchor.UpperLeft).Mono();
-            frameData.rectTransform.Fill(16, 250, 16, 14);
-            inputHist = Ui.Text(trainingPanel, "", 20, new Color(0.8f, 1f, 0.8f), TextAnchor.UpperLeft).Mono();
-            inputHist.rectTransform.Fill(16, 14, 16, 320);
-            trainingHelp = Ui.Text(root, "", 22, new Color(1f, 0.95f, 0.7f), TextAnchor.LowerLeft).Outlined();
-            trainingHelp.rectTransform.Place(0f, 0f, 1100, 120, 0f, 0f, 16, 40);
+            frameData = Ui.Text(trainingPanel, "", 18, Color.white, TextAnchor.UpperLeft).Mono();
+            frameData.rectTransform.Fill(14, 210, 14, 12);
+            inputHist = Ui.Text(trainingPanel, "", 18, new Color(0.8f, 1f, 0.8f), TextAnchor.UpperLeft).Mono();
+            inputHist.rectTransform.Fill(14, 12, 14, 270);
+            trainingHelp = Ui.Text(root, "", 22, new Color(1f, 0.95f, 0.7f), TextAnchor.LowerCenter).Outlined();
+            trainingHelp.rectTransform.Place(0.5f, 0f, 1900, 34, 0.5f, 0f, 0, 6);
             trainingPanel.gameObject.SetActive(false);
             trainingHelp.gameObject.SetActive(false);
         }
@@ -257,6 +257,7 @@ namespace MysticKombat
 
             trainingPanel.gameObject.SetActive(Training);
             trainingHelp.gameObject.SetActive(Training);
+            hints.gameObject.SetActive(!Training);
             if (Training) RenderTraining(training);
         }
 
