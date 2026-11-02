@@ -80,6 +80,7 @@ namespace MysticKombat.EditorTools
 
         [MenuItem("Mystic Kombat/Build Windows")]
         public static void BuildWindows() => Build(BuildTarget.StandaloneWindows64, "Builds/Windows/MysticKombat.exe");
+        public static void BuildRelease() => Build(BuildTarget.StandaloneWindows64, "Builds/Release/MysticKombat/MysticKombat.exe");
 
         [MenuItem("Mystic Kombat/Build Linux")]
         public static void BuildLinux() => Build(BuildTarget.StandaloneLinux64, "Builds/Linux/MysticKombat.x86_64");
